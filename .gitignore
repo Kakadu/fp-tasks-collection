@@ -1,0 +1,15 @@
+/main.pdf
+*.aux 
+*.bbl 
+*.bcf 
+*.dvi 
+*.blg 
+*.ilg 
+*.idx 
+*.ind 
+*.log 
+*.toc 
+*.ptc 
+*.ps 
+*.xml
+
