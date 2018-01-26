@@ -42,7 +42,7 @@
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
-\documentclass[11pt,fleqn]{book} % Default font size and left-justified equations
+\documentclass[11pt,fleqn,oneside]{book} % Default font size and left-justified equations
 
 %----------------------------------------------------------------------------------------
 
@@ -58,9 +58,10 @@
 \thispagestyle{empty}
 \begin{tikzpicture}[remember picture,overlay]
 \node[inner sep=0pt] (background) at (current page.center) {\includegraphics[width=\paperwidth]{background}};
-\draw (current page.center) node [fill=ocre!30!white,fill opacity=0.6,text opacity=1,inner sep=1cm]{\Huge\centering\bfseries\sffamily\parbox[c][][t]{\paperwidth}{\centering The Search for a Title\\[15pt] % Book title
-{\Large A Profound Subtitle}\\[20pt] % Subtitle
-{\huge Dr. John Smith}}}; % Author name
+\draw (current page.center) node [fill=ocre!30!white,fill opacity=0.6,text opacity=1,inner sep=1cm]{\Huge\centering\bfseries\sffamily\parbox[c][][t]{\paperwidth}{\centering Collection of Functional Programming Tasks\\[15pt] % Book title
+{\Large WTF Жуткие задачи про Haskell и не только WTF
+}\\[20pt] % Subtitle
+{\huge Kakadu}}}; % Author name
 \end{tikzpicture}
 \vfill
 \endgroup
@@ -73,7 +74,7 @@
 ~\vfill
 \thispagestyle{empty}
 
-\noindent Copyright \copyright\ 2013 John Smith\\ % Copyright notice
+\noindent Copyright \textcopyright\ 2013 John Smith\\ % Copyright notice
 
 \noindent \textsc{Published by Publisher}\\ % Publisher
 
@@ -99,10 +100,25 @@
 
 \pagestyle{fancy} % Print headers again
 
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\nexttask}[1]{\section{#1}}
 %----------------------------------------------------------------------------------------
 %	PART
 %----------------------------------------------------------------------------------------
+\makeatletter\@openrightfalse % to remove blank pages after parts
+\part{Part Zero}
+\chapter{Unsorted Remarks}
 
+\lipsum[1-7] % Dummy text
+\nexttask{asdfasdf}
+\nexttask{asdfasdfasdfasdfa}
+\section{44444444qaqqq}
+\section{фывафывафываф}
+фывафывафывафывафыв
+asdfas моя васц
+%----------------------------------------------------------------------------------------
+%	PART
+%----------------------------------------------------------------------------------------
 \part{Part One}
 
 %----------------------------------------------------------------------------------------
@@ -345,14 +361,14 @@ Treatment 3 & 0.0009271 & 0.296 \\
 %	BIBLIOGRAPHY
 %----------------------------------------------------------------------------------------
 
-\chapter*{Bibliography}
-\addcontentsline{toc}{chapter}{\textcolor{ocre}{Bibliography}}
-\section*{Books}
-\addcontentsline{toc}{section}{Books}
-\printbibliography[heading=bibempty,type=book]
-\section*{Articles}
-\addcontentsline{toc}{section}{Articles}
-\printbibliography[heading=bibempty,type=article]
+% \chapter*{Bibliography}
+% \addcontentsline{toc}{chapter}{\textcolor{ocre}{Bibliography}}
+% \section*{Books}
+% \addcontentsline{toc}{section}{Books}
+% \printbibliography[heading=bibempty,type=book]
+% \section*{Articles}
+% \addcontentsline{toc}{section}{Articles}
+% \printbibliography[heading=bibempty,type=article]
 
 %----------------------------------------------------------------------------------------
 %	INDEX

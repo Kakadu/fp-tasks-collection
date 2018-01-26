@@ -28,7 +28,24 @@
 
 \usepackage{tikz} % Required for drawing custom shapes
 
-\usepackage[english]{babel} % English language/hyphenation
+%\usepackage[english]{babel} % English language/hyphenation
+\usepackage{fontspec}
+\setmainfont[
+  Ligatures=TeX,
+  Extension=.otf,
+  BoldFont=cmunbx,
+  ItalicFont=cmunti,
+  BoldItalicFont=cmunbi,
+]{cmunrm}
+\setsansfont[
+  Ligatures=TeX,
+  Extension=.otf,
+  BoldFont=cmunsx,
+  ItalicFont=cmunsi,
+]{cmunss}
+\usepackage{xunicode}
+%\usepackage{xecyr}
+\DeclareTextCommandDefault{\nobreakspace}{\leavevmode\nobreak\ } 
 
 \usepackage{enumitem} % Customize lists
 \setlist{nolistsep} % Reduce spacing between bullet points and numbered lists

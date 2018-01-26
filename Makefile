@@ -1,10 +1,10 @@
 .PHONY: clean all
-
+MAIN=main
 all:
-	pdflatex main
-	makeindex main.idx -s StyleInd.ist
-	biber main
-	pdflatex main x 2
+	xelatex $(MAIN) && \
+	makeindex $(MAIN).idx -s StyleInd.ist && \
+	biber $(MAIN) && \
+	xelatex $(MAIN) x 2
 
 clean:
 	$(RM) *.aux *.bbl *.bcf *.dvi *.blg *.ilg *.idx *.ind *.log \
