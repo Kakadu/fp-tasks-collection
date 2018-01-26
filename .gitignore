@@ -1,6 +1,7 @@
 /main.pdf
 *.aux 
 *.bbl 
+*.backup
 *.bcf 
 *.dvi 
 *.blg 

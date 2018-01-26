@@ -1,0 +1,12 @@
+% синтаксиc \index{category!subcategory!subcatgory}
+\newcommand{\ADT}{ADT\index{ADT}}
+\newcommand{\monads}{монады\index{монады}}
+\newcommand{\parsec}{парсер-комбинаторы\index{парсер-комбинаторы}}
+%TODO: может быть ключевые слова надо давать на английском, а перевод поставлять в отдельном справочнике.
+
+% Тут можно расширить список опциональных
+\DeclareDocumentCommand \jopics { o o m }{
+Темы:
+\IfNoValueF{#1}{#1,}
+\IfNoValueF{#2}{#2,}
+#3 .\\}
