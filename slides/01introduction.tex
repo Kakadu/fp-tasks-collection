@@ -1,11 +1,20 @@
 \documentclass{beamer}
+\usetheme{CambridgeUS}
+\beamertemplatenavigationsymbolsempty % remove navigation bar
 
 % \usepackage[utf8]{inputenc}
 % \usepackage{default}
-\usepackage[utf8]{inputenc}
-\usepackage[T2A]{fontenc}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T2A]{fontenc}
+%\usepackage{polyglossia}
 
-\usepackage{fontspec}
+%\usepackage{fontspec}
+%\usepackage[cm-default]{fontspec} % or install lmodern
+\usepackage{xltxtra} % load xunicode
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setotherlanguage{english}
+
 \setmainfont[
  Ligatures=TeX,
  Extension=.otf,
@@ -20,8 +29,134 @@
  ItalicFont=cmunsi,
 ]{cmunss}
 
-\begin{document}
-asdfas
 
-% https://www.cs.kent.ac.uk/people/staff/dat/tfp12/tfp12.pdf
+\usefonttheme{professionalfonts}
+\usepackage{times}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,shapes}
+
+
+\title[Part of thesis title]{Функциональщина}
+\author{Kakadu}
+
+\institute{St Petersburg University}
+
+\date{\today}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+\begin{document}
+\maketitle
+
+\begin{comment}
+:Title: Beamer arrows
+:Tags: Remember picture, Beamer, Physics & chemistry, Overlays
+:Use page: 3
+
+With PGF/TikZ version 1.09 and later, it is possible to draw paths between nodes across
+different pictures. This is a useful feature for presentations with the
+Beamer package. In this example I've combined the new PGF/TikZ's overlay feature
+with Beamer overlays. Download the PDF version to see the result.
+
+**Note.** This only works with PDFTeX, and you have to run PDFTeX twice.
+
+| Author: Kjell Magne Fauske
+
+\end{comment}
+
+
+% For every picture that defines or uses external nodes, you'll have to
+% apply the 'remember picture' style. To avoid some typing, we'll apply
+% the style to all pictures.
+\tikzstyle{every picture}+=[remember picture]
+
+% By default all math in TikZ nodes are set in inline mode. Change this to
+% displaystyle so that we don't get small fractions.
+\everymath{\displaystyle}
+
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% Uncomment these lines for an automatically generated outline.
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+
+\section{Objective}
+
+\begin{frame}{$\Lambda$ исчисление}
+\begin{itemize}
+\item Synthesize fiber geometry luminescence solar energy concentrator (LSC) based on polysiloxanes polymer with 22\% and 14\% of diphenyl units in the chain.
+
+\item Avoiding reflection from back signal by black painting and analyzing intensity loss under bended fibers.
+
+\end{itemize}
+\end{frame}
+% 
+% \begin{frame}{$\lambda$ исчисление }
+% \begin{itemize}
+% \item 1
+% 
+% \item 2
+% \end{itemize}
+% \end{frame}
+% 
+% 
+% \begin{frame}{LISP }
+% \begin{itemize}
+% \item 1
+% 
+% \item 2
+% \end{itemize}
+% \end{frame}
+
+
+
+\section{Introduction}
+\begin{frame}{frame title}
+% \begin{itemize}
+% \item {LSC is a transparent matrix material such as plastic plate, fiber, coated or doped with organic fluorescent dyes, inorganic phosphors or quantum dots (QD) that absorb sunlight and re-emit at longer wavelengths}
+% \item{LSCs is promising  research topic to solve cost effectiveness, efficiency challenges of PV cells and used in buildings due to its flexibility.
+% }
+% \end{itemize}
+\newpage
+\begin{itemize}
+\item{type of luminescence species and matrix, number and type of solar cell used and also size of LSCs decisively affects the optical efficiency
+}
+\item{fiber LSC which satisfactorily meets necessary standards of flexibility, by controlling the phenyl functional group in the polysiloxane compound is essential.
+}
+\item{minimize reflection from back signals, by carbon black painting and light travel along one direction has to be analyzed }
+\item{Bending the material results in light intensity loss,the losses relative to radius of bending has to be studied }
+
+\end{itemize}
+\end{frame}
+
+
+% \section{Material and methods}
+% \begin{frame}{frame title}
+% \end{frame}
+% \section{Result and discussion}
+% \begin{frame}{frame title}
+% % \begin{figure}[h!]
+% %    			\includegraphics[scale=0.6]{22.png}
+% %             \caption{disk samples}
+% % 			\end{figure}
+% %             
+% % \end{frame}
+% \section{Conclusion and future work}
+% \begin{frame}{frame title}
+% \end{frame}
+
 \end{document}

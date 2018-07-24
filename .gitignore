@@ -7,8 +7,11 @@
 *.blg 
 *.ilg 
 *.idx 
+*.nav
+*.out
 *.ind 
 *.log 
+*.snm
 *.toc 
 *.ptc 
 *.ps 
