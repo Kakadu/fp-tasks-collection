@@ -130,18 +130,54 @@ with Beamer overlays. Download the PDF version to see the result.
 % 
 % \end{frame}
 
-\begin{frame}{Два вида функционального программирования}
-На основе LISP
+\begin{frame}{История 1}
+$\lambda$-исчисление ($\lambda$-calculus, Church \& Rosser 1936) -- альтернативное (наивной теории множеств) основание математики
+\newline \newline
+Прикладное $\lambda$-исчисление (applied $\lambda$-calculus, Church 1941) -- с добавление числовых констант, операций и т.д.
+
+\pause
+LISP
 \begin{itemize}
- \item \emph{Бестиповое}, используем \emph{макросы} чтобы писать было так просто, что нереально допустить ошибку
+\item[\faGood] M-language с функциями, рекурсией и джентельменским набором
+\item[\faGood] S-language c \lstinline{eval} и \lstinline{quote} чтобы передавать функции в функции
+\item[\faBad] Не основан на лямбда исчислении (dynamic binding вместо lexicographic)
 \end{itemize}
 
+\end{frame}
+
+\begin{frame}{История 2 }
+ISWIM (начало 1960х, "If you see What I Mean``)
+\begin{itemize}
+\item Алгебраические типы данных
+\item появились let, rec, синтаксис $f(x) = \epsilon$ 
+            вместо $f = \lambda x \rightarrow \epsilon$
+\item $J$-оператор, чтобы получать текущее продолжение
+\end{itemize}
+PAL (call-by-value, безтиповый, проверка типов в рантайме)
+
+Scheme (1975)
 \end{frame}
 
 
 
 \section{Introduction}
+\begin{frame}{frame title}
+% \begin{itemize}
+% \item {LSC is a transparent matrix material such as plastic plate, fiber, coated or doped with organic fluorescent dyes, inorganic phosphors or quantum dots (QD) that absorb sunlight and re-emit at longer wavelengths}
+% \item{LSCs is promising  research topic to solve cost effectiveness, efficiency challenges of PV cells and used in buildings due to its flexibility.
+% }
+% \end{itemize}
+\newpage
+\begin{itemize}
+\item{type of luminescence species and matrix, number and type of solar cell used and also size of LSCs decisively affects the optical efficiency
+}
+\item{fiber LSC which satisfactorily meets necessary standards of flexibility, by controlling the phenyl functional group in the polysiloxane compound is essential.
+}
+\item{minimize reflection from back signals, by carbon black painting and light travel along one direction has to be analyzed }
+\item{Bending the material results in light intensity loss,the losses relative to radius of bending has to be studied }
 
+\end{itemize}
+\end{frame}
 
 
 % \section{Material and methods}
