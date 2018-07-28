@@ -2,20 +2,21 @@
 \usetheme{CambridgeUS}
 \beamertemplatenavigationsymbolsempty % remove navigation bar
 
-% \usepackage[utf8]{inputenc}
-% \usepackage{default}
-% \usepackage[utf8]{inputenc}
-% \usepackage[T2A]{fontenc}
-%\usepackage{polyglossia}
+\usepackage{xcolor}
+\definecolor{YellowGreen} {HTML}{B5C28C}
+\definecolor{ForestGreen} {HTML}{009B55}
 
-%\usepackage{fontspec}
-%\usepackage[cm-default]{fontspec} % or install lmodern
 \usepackage{xltxtra} % load xunicode
 \usepackage{polyglossia}
 \setmainlanguage{russian}
 \setotherlanguage{english}
+
+\let\cyrillicfonttt\monofamily
+\newfontfamily\dejaVuSansMono{DejaVu Sans Mono}
+\newfontfamily\monacoB{MonacoB}
+
 \usepackage{listings}
-\lstdefinestyle{myCustomMatlabStyle}{
+\lstdefinestyle{style1}{
   language=haskell,
   numbers=left,
   stepnumber=1,
@@ -24,8 +25,33 @@
   showspaces=false,
   showstringspaces=false
 }
-\lstset{basicstyle=\large,style=myCustomMatlabStyle}
+\lstdefinestyle{hsstyle1}
+{ language=haskell
+         , basicstyle=\monacoB
+         , deletekeywords={Int,Float,String,List,Void}
+         , breaklines=true
+         , columns=fullflexible
+         , commentstyle=\color{ForestGreen}
+         , escapeinside=§§
+         , escapebegin=\begin{russian}\commentfont
+         , escapeend=\end{russian}
+         , commentstyle=\color{ForestGreen}
+         , escapeinside=§§
+         , escapebegin=\begin{russian}\monacoB\color{ForestGreen}
+         , escapeend=\end{russian}
+         , mathescape=true
+}
 
+\newcommand{\inline}[1]{\lstinline{haskell}{#1}}
+\def\hsinline{\lstinline[style={hsstyle1}]}
+\def\inline{\hsinline}
+
+\lstnewenvironment{hslisting} {
+    \lstset { style={hsstyle1} }
+  }
+  {}
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
 \setmainfont[
  Ligatures=TeX,
  Extension=.otf,
@@ -33,6 +59,7 @@
  ItalicFont=cmunti,
  BoldItalicFont=cmunbi,
 ]{cmunrm}
+% С засечками (для заголовков)
 \setsansfont[
  Ligatures=TeX,
  Extension=.otf,
@@ -46,25 +73,31 @@
 \usepackage{tikz}
 \usepackage{amsmath}
 %\DeclareMathOperator{->}{\rightarrow}
+\newcommand\iso{\ensuremath{\cong}}
 \usepackage{verbatim}
 \usepackage{graphicx}
 \usetikzlibrary{arrows,shapes}
 
-\usepackage{xcolor}
-\definecolor{YellowGreen} {HTML}{B5C28C}
-\definecolor{ForestGreen} {HTML}{009B55}
-
-\usepackage{fontspec}
-
 \usepackage{fontawesome}
+% \newfontfamily{\FA}{Font Awesome 5 Free} % some glyphs missing
 \expandafter\def\csname faicon@facebook\endcsname{{\FA\symbol{"F09A}}}
 \def\faQuestionSign{{\FA\symbol{"F059}}}
+\def\faQuestion{{\FA\symbol{"F128}}}
+\def\faExclamation{{\FA\symbol{"F12A}}}
+\def\faUploadAlt{{\FA\symbol{"F093}}}
+\def\faLemon{{\FA\symbol{"F094}}}
+\def\faPhone{{\FA\symbol{"F095}}}
+\def\faCheckEmpty{{\FA\symbol{"F096}}}
+\def\faBookmarkEmpty{{\FA\symbol{"F097}}}
+
 \newcommand{\faGood}{\textcolor{ForestGreen}{\faThumbsUp}}
 \newcommand{\faBad}{\textcolor{red}{\faThumbsODown}}
 
+\usepackage{soul} % for \st that strikes through
+\usepackage[normalem]{ulem} % \sout
+
 % \usepackage{minted}
 % \newcommand{\inline}[1]{\mintinline{haskell}{#1}}
-\newcommand{\inline}[1]{\lstinline{haskell}{#1}}
 
 \title[Part of thesis title]{Функциональщина}
 \author{Kakadu}
@@ -82,24 +115,7 @@
 }
 
 \begin{document}
-\maketitle
-
-\begin{comment}
-:Title: Beamer arrows
-:Tags: Remember picture, Beamer, Physics & chemistry, Overlays
-:Use page: 3
-
-With PGF/TikZ version 1.09 and later, it is possible to draw paths between nodes across
-different pictures. This is a useful feature for presentations with the
-Beamer package. In this example I've combined the new PGF/TikZ's overlay feature
-with Beamer overlays. Download the PDF version to see the result.
-
-**Note.** This only works with PDFTeX, and you have to run PDFTeX twice.
-
-| Author: Kjell Magne Fauske
-
-\end{comment}
-
+% \maketitle
 
 % For every picture that defines or uses external nodes, you'll have to
 % apply the 'remember picture' style. To avoid some typing, we'll apply
@@ -110,16 +126,10 @@ with Beamer overlays. Download the PDF version to see the result.
 % displaystyle so that we don't get small fractions.
 \everymath{\displaystyle}
 
-
-\begin{frame}
-  \titlepage
-\end{frame}
-
 % Uncomment these lines for an automatically generated outline.
-\begin{frame}{Outline}
-  \tableofcontents
-\end{frame}
-
+% \begin{frame}{Outline}
+%   \tableofcontents
+% \end{frame}
 
 \section{Objective}
 
@@ -160,55 +170,98 @@ Common Lisp, Scheme, Emacs Lisp, Clojure
 \end{itemize}
 \vspace{0.5cm}
 Диалекты: Standart ML, OCaml, F\#, \textcolor{ForestGreen}{Haskell}, Scala
-
 \end{frame}
 
-\begin{frame}{Особенности}
+\begin{frame}{Некоторые отличительные собенности...}
 \begin{itemize}
  \item Алгебраические типы данных (algebraic datatypes, variant types, discrimintated unions)
  \item Сопоставление с образцом (pattern matching)
  \item Строгая статическая типизация
  \item Легкое  написание DSL используя \emph{комбинаторы}
+ \item Автоматический вывод типов
 \end{itemize}
+\end{frame}
+
+\begin{frame}{...которые перетягивают в известные языки}
+С++, C\#, Java, ..., Scala\faQuestion \faExclamation,
+\\
+\centering{\includegraphics[scale=0.3]{img/lipstick-on-a-pig.jpg}}
 \end{frame}
 
 
 \section{Типы}
 
 \begin{frame}[fragile]{Синтаксис типов в Haskell (1/2)}
-% ~\ \emph{Тип функции}, действующей из аргумента типа $\mathcal{A}$ и возвращающей результат $\mathcal{B}$, обозначается как \lstinline{data X = A -> B}.
-% % \\ \pause
-% ~\ Функции, у которых $n$ аргументов ($n>1$) моделируются как функции возвращающие функцию от $n-1$ аргументов. Например, $\mathcal{-> (B\rightarrow C)}$. Ассоциативность правая: $\mathcal{-> (B\rightarrow C)} = \mathcal{-> B\rightarrow C}$
- % 
-\begin{lstlisting} [basicstyle=\ttfamily]
-Put your code here.1iI
-\end{lstlisting}
+~\ \emph{Тип функции}, действующей из аргумента типа \hsinline{A} и возвращающей результат \hsinline{B}, обозначается как \hsinline{A->B}.
+\\ \pause
+~\ Функции, у которых $n$ аргументов ($n>1$) моделируются как функции возвращающие функцию от $n-1$ аргументов. Например, \hsinline{A->(B->C)}. 
 
+\pause Ассоциативность правая
+
+\begin{hslisting}
+A -> (B -> C)  $\cong$ A -> B -> C
+
+1Il
+\end{hslisting}
 \end{frame}
+
 
 \begin{frame}{Синтаксис типов в Haskell (2/2)}
-~\ \emph{Типовые переменные} в типах полиморфных функций пишутся с маленькой буквы. Например, $a -> b$ или $a -> b -> c$ или $a -> (a -> b) -> b$ 
+~\ \emph{Типовые переменные} в типах полиморфных функций пишутся с маленькой буквы. Например, \inline{a -> b} или \inline{a -> b -> c} или 
+\inline=a -> (a -> b) $ $ -> b=
+\vspace{0.5cm} 
 \\ \pause
-~\ \emph{Имена типов} пишутся с заглавной буквы. Например,  \lstinline=Int=, \lstinline=String=, \lstinline=Float=.
+~\ \emph{Имена типов} пишутся с заглавной буквы. Например,  \inline=Int=, \inline=String=, \inline=Float=.
+\vspace{0.5cm} 
 \\ \pause
-~\ \emph{Типы с параметрами}: \lstinline=List Int=, \lstinline=List String=, \lstinline=List a=, и т.д. 
+~\ \emph{Типы с параметрами}: \inline=List Int=, \inline=List String=, \inline=List a=, и т.д. 
+\vspace{0.5cm} 
+\\ \pause
+~\ Когда какое-то имя \emph{типизируется как}(\emph{имеет тип}) \inline=T=, то это записывают так: \inline=x :: T=.
+\end{frame}
+
+\begin{frame}[fragile]{А что такое тип?}
+% \pause
+~\ Ну, если $x$ принадлежит типу \inline=T=, то \inline=T= определяет, какие значения может принимать $x$.
+\\ \vspace{0.5cm} %\pause
+~\ \emph{Тип} \inline=T= у $x$ -- это \sout{множество} совокупность значений, которые могут быть у $x$.
+\vspace{0.5cm} \\ %\pause
+~\  Если \inline=x :: T=, то тип \inline=T= \emph{населен} иксом.
+\\ \vspace{0.5cm} %\pause
+~\ Если $\nexists$ \inline=x=, таких что \inline=x :: T=, то тип \inline=T= \emph{не населен}.
+\end{frame}
+
+\begin{frame}[fragile]{Примеры типов}
+Тип, который не населен
+\begin{hslisting}
+Prelude> :i Data.Void.Void
+data Data.Void.Void        -- Defined in 'Data.Void'
+\end{hslisting}
+
+Тип, у которого только один житель
+\begin{hslisting}
+Prelude> :i ()
+data () = ()               -- Defined in 'GHC.Tuple'
+Prelude> :t ()
+() :: ()
+\end{hslisting}
+\end{frame}
+
+\begin{frame}[fragile]{Как ведет себя функция с типом}
+
+{\Large \faQuestion} \inline=Void -> Int= \\
+\vspace{1cm}
+{\large \faQuestion} \inline=a -> ()= \\
+\vspace{0.5cm}
+Ответ:
+\begin{hslisting}
+unit x = ()
+{- §а лучше§ -}
+unit _ = ()
+\end{hslisting}
 \end{frame}
 
 
-
-% \section{Material and methods}
-% \begin{frame}{frame title}
-% \end{frame}
-% \section{Result and discussion}
-% \begin{frame}{frame title}
-% % \begin{figure}[h!]
-% %    			\includegraphics[scale=0.6]{22.png}
-% %             \caption{disk samples}
-% % 			\end{figure}
-% %             
-% % \end{frame}
-% \section{Conclusion and future work}
-% \begin{frame}{frame title}
-% \end{frame}
+% https://repl.it/languages/haskell
 
 \end{document}
