@@ -5,6 +5,8 @@
 \usepackage{xcolor}
 \definecolor{YellowGreen} {HTML}{B5C28C}
 \definecolor{ForestGreen} {HTML}{009B55}
+\definecolor{MyBackground}{HTML}{F0EDAA}
+
 
 \usepackage{xltxtra} % load xunicode
 \usepackage{polyglossia}
@@ -13,6 +15,7 @@
 
 \let\cyrillicfonttt\monofamily
 \newfontfamily\dejaVuSansMono{DejaVu Sans Mono}
+% https://github.com/vjpr/monaco-bold/raw/master/MonacoB/MonacoB.otf
 \newfontfamily\monacoB{MonacoB}
 
 \usepackage{listings}
@@ -40,6 +43,7 @@
          , escapebegin=\begin{russian}\monacoB\color{ForestGreen}
          , escapeend=\end{russian}
          , mathescape=true
+%          , backgroundcolor = \color{MyBackground}
 }
 
 \newcommand{\inline}[1]{\lstinline{haskell}{#1}}
@@ -71,6 +75,8 @@
 \usefonttheme{professionalfonts}
 \usepackage{times}
 \usepackage{tikz}
+\usetikzlibrary{cd}
+% \usepackage{tikz-cd}
 \usepackage{amsmath}
 %\DeclareMathOperator{->}{\rightarrow}
 \newcommand\iso{\ensuremath{\cong}}
@@ -261,6 +267,52 @@ unit _ = ()
 \end{hslisting}
 \end{frame}
 
+\begin{frame}[fragile]{Тип пары}
+\begin{center}
+\begin{tikzpicture}[commutative diagrams/every diagram]
+\node (P1) at (90:0cm) {\inline=(a,b)=};
+\node (P2) at (90+ 90+35:2cm) {\inline=a=};
+\node (P3) at (90+270-35:2cm) {\inline=b=};
+\path[commutative diagrams/.cd, every arrow, every label]
+(P1) edge node[swap] {\inline=fst=} (P2)
+(P1) edge node[swap] {\inline=snd=} (P3)
+;
+\end{tikzpicture}
+\end{center}
+
+\begin{hslisting}
+Prelude> let fst (x,_) = x
+Prelude> :t fst
+fst :: (a, b) -> a
+
+Prelude> let snd (_,y) = y
+Prelude> :t snd
+snd :: (a, b) -> b
+\end{hslisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{1}
+\begin{center}
+\begin{tikzpicture}[commutative diagrams/every diagram]
+\node (P0) at (90:2.3cm) {$P$};
+\node (P1) at (90:0cm) {$(a,b)$};
+\node (P2) at (90+ 90+35:3cm) {\makebox[1ex][l]{a}};
+\node (P3) at (90+270-35:3cm) {\makebox[1ex][r]{b}};
+% \node (P4) at (90+4*72:2cm) {ab2};
+\path[commutative diagrams/.cd, every arrow, every label]
+(P0) edge node[swap] {$m$} (P1)
+(P1) edge node[swap] {$fst$} (P2)
+(P1) edge node[swap] {$snd$} (P3)
+% (P2) edge node {$\phi\otimes 1$} (P3)
+(P0) edge[bend right] node[swap] {$fst'$} (P2)
+(P0) edge[bend left]  node[swap] {$snd'$} (P3)
+% (P4) edge node {$\phi$} (P3)
+% (P0) edge node {$\phi$} (P4)
+;
+\end{tikzpicture}
+\end{center}
+\end{frame}
 
 % https://repl.it/languages/haskell
 
