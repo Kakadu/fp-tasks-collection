@@ -1,0 +1,200 @@
+\documentclass{beamer}
+\usetheme{CambridgeUS}
+\beamertemplatenavigationsymbolsempty % remove navigation bar
+
+\usepackage{xcolor}
+\definecolor{YellowGreen} {HTML}{B5C28C}
+\definecolor{ForestGreen} {HTML}{009B55}
+\definecolor{MyBackground}{HTML}{F0EDAA}
+
+
+\usepackage{xltxtra} % load xunicode
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setotherlanguage{english}
+
+\let\cyrillicfonttt\monofamily
+\newfontfamily\dejaVuSansMono{DejaVu Sans Mono}
+% https://github.com/vjpr/monaco-bold/raw/master/MonacoB/MonacoB.otf
+\newfontfamily\monacoB{MonacoB}
+
+\usepackage{listings}
+\lstdefinestyle{style1}{
+  language=haskell,
+  numbers=left,
+  stepnumber=1,
+  numbersep=10pt,
+  tabsize=4,
+  showspaces=false,
+  showstringspaces=false
+}
+\lstdefinestyle{hsstyle1}
+{ language=haskell
+         , basicstyle=\monacoB
+         , deletekeywords={Int,Float,String,List,Void}
+         , breaklines=true
+         , columns=fullflexible
+         , commentstyle=\color{ForestGreen}
+         , escapeinside=§§
+         , escapebegin=\begin{russian}\commentfont
+         , escapeend=\end{russian}
+         , commentstyle=\color{ForestGreen}
+         , escapeinside=§§
+         , escapebegin=\begin{russian}\monacoB\color{ForestGreen}
+         , escapeend=\end{russian}
+         , mathescape=true
+%          , backgroundcolor = \color{MyBackground}
+}
+
+\newcommand{\inline}[1]{\lstinline{haskell}{#1}}
+\def\hsinline{\lstinline[style={hsstyle1}]}
+\def\inline{\hsinline}
+
+\lstnewenvironment{hslisting} {
+    \lstset { style={hsstyle1} }
+  }
+  {}
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+\setmainfont[
+ Ligatures=TeX,
+ Extension=.otf,
+ BoldFont=cmunbx,
+ ItalicFont=cmunti,
+ BoldItalicFont=cmunbi,
+]{cmunrm}
+% С засечками (для заголовков)
+\setsansfont[
+ Ligatures=TeX,
+ Extension=.otf,
+ BoldFont=cmunsx,
+ ItalicFont=cmunsi,
+]{cmunss}
+% \setmonofont[Scale=0.6]{Monaco}
+
+\usefonttheme{professionalfonts}
+\usepackage{times}
+\usepackage{tikz}
+\usetikzlibrary{cd}
+% \usepackage{tikz-cd}
+\usepackage{amsmath}
+%\DeclareMathOperator{->}{\rightarrow}
+\newcommand\iso{\ensuremath{\cong}}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,shapes}
+
+\usepackage{fontawesome}
+% \newfontfamily{\FA}{Font Awesome 5 Free} % some glyphs missing
+\expandafter\def\csname faicon@facebook\endcsname{{\FA\symbol{"F09A}}}
+\def\faQuestionSign{{\FA\symbol{"F059}}}
+\def\faQuestion{{\FA\symbol{"F128}}}
+\def\faExclamation{{\FA\symbol{"F12A}}}
+\def\faUploadAlt{{\FA\symbol{"F093}}}
+\def\faLemon{{\FA\symbol{"F094}}}
+\def\faPhone{{\FA\symbol{"F095}}}
+\def\faCheckEmpty{{\FA\symbol{"F096}}}
+\def\faBookmarkEmpty{{\FA\symbol{"F097}}}
+
+\newcommand{\faGood}{\textcolor{ForestGreen}{\faThumbsUp}}
+\newcommand{\faBad}{\textcolor{red}{\faThumbsODown}}
+
+\usepackage{soul} % for \st that strikes through
+\usepackage[normalem]{ulem} % \sout
+
+% \usepackage{minted}
+% \newcommand{\inline}[1]{\mintinline{haskell}{#1}}
+
+\title[Part of thesis title]{Функциональщина}
+\author{Kakadu}
+
+\institute{St Petersburg University}
+
+\date{\today}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+\begin{document}
+% \maketitle
+
+% For every picture that defines or uses external nodes, you'll have to
+% apply the 'remember picture' style. To avoid some typing, we'll apply
+% the style to all pictures.
+\tikzstyle{every picture}+=[remember picture]
+
+% By default all math in TikZ nodes are set in inline mode. Change this to
+% displaystyle so that we don't get small fractions.
+\everymath{\displaystyle}
+
+% Uncomment these lines for an automatically generated outline.
+% \begin{frame}{Outline}
+%   \tableofcontents
+% \end{frame}
+
+\section{Objective}
+
+% \begin{frame}{$\Lambda$-исчисление (Church \& Rosser 1936; Church 1941)}
+% 
+% {\color{teal}\faQuestionSign} Чем отличается \emph{синтаксис} от \emph{семантики}?
+% \vspace{1cm}
+% 
+% Термы -- синтаксические конструкции (здесь -- $\lambda$-исчисления). Термы бывают
+% \begin{itemize}
+% \item именованные ``переменные'';
+% \item ``абстракция'' ($\rightarrow$) строится из имени переменной и терма;
+% \item ``применение'' одного терма к другому.
+% \end{itemize}
+% 
+% \pause
+% Например,
+% \begin{itemize}
+%  \item Переменные можно обозначать строчкой букв: $x$, $y$, $z$, и т.д.
+%  \item Если терм $B$ удваивает переменную $x$, то терм $\lambda x \rightarrow B$ это терм, обозначающий функцию ``помножить вход на 2''
+%  \item Если $f$ терм-функция, которая удваивает вход, и $z$ -- терм-переменная, со семантическим значением 10, то от синтаксической конструкции $f z$ можно ожидать семантическое значение 20.
+% \end{itemize}
+% 
+% \end{frame}
+
+\begin{frame}{Два вида функционального программирования}
+На основе Lisp
+\begin{itemize}
+ \item \emph{Бестиповое}, используем \emph{макросы} чтобы писать было так просто, что нереально допустить ошибку
+\end{itemize}
+\vspace{0.5cm}
+Common Lisp, Scheme, Emacs Lisp, Clojure
+
+\vspace{1cm}\pause
+На основе ML
+\begin{itemize}
+ \item Используем \emph{типы}, чтобы отфильтровать бессмысленные программы
+\end{itemize}
+\vspace{0.5cm}
+Диалекты: Standart ML, OCaml, F\#, \textcolor{ForestGreen}{Haskell}, Scala
+\end{frame}
+
+\begin{frame}{Некоторые отличительные собенности...}
+\begin{itemize}
+ \item Алгебраические типы данных (algebraic datatypes, variant types, discrimintated unions)
+ \item Сопоставление с образцом (pattern matching)
+ \item Строгая статическая типизация
+ \item Легкое  написание DSL используя \emph{комбинаторы}
+ \item Автоматический вывод типов
+\end{itemize}
+\end{frame}
+
+\begin{frame}{...которые перетягивают в известные языки}
+С++, C\#, Java, ..., Scala\faQuestion \faExclamation,
+\\
+\centering{\includegraphics[scale=0.3]{img/lipstick-on-a-pig.jpg}}
+\end{frame}
+
+
+
+
+\end{document}

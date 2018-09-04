@@ -137,82 +137,42 @@
 %   \tableofcontents
 % \end{frame}
 
-\section{Objective}
-
-% \begin{frame}{$\Lambda$-исчисление (Church \& Rosser 1936; Church 1941)}
-% 
-% {\color{teal}\faQuestionSign} Чем отличается \emph{синтаксис} от \emph{семантики}?
-% \vspace{1cm}
-% 
-% Термы -- синтаксические конструкции (здесь -- $\lambda$-исчисления). Термы бывают
-% \begin{itemize}
-% \item именованные ``переменные'';
-% \item ``абстракция'' ($\rightarrow$) строится из имени переменной и терма;
-% \item ``применение'' одного терма к другому.
-% \end{itemize}
-% 
-% \pause
-% Например,
-% \begin{itemize}
-%  \item Переменные можно обозначать строчкой букв: $x$, $y$, $z$, и т.д.
-%  \item Если терм $B$ удваивает переменную $x$, то терм $\lambda x \rightarrow B$ это терм, обозначающий функцию ``помножить вход на 2''
-%  \item Если $f$ терм-функция, которая удваивает вход, и $z$ -- терм-переменная, со семантическим значением 10, то от синтаксической конструкции $f z$ можно ожидать семантическое значение 20.
-% \end{itemize}
-% 
-% \end{frame}
-
-\begin{frame}{Два вида функционального программирования}
-На основе Lisp
-\begin{itemize}
- \item \emph{Бестиповое}, используем \emph{макросы} чтобы писать было так просто, что нереально допустить ошибку
-\end{itemize}
-\vspace{0.5cm}
-Common Lisp, Scheme, Emacs Lisp, Clojure
-
-\vspace{1cm}\pause
-На основе ML
-\begin{itemize}
- \item Используем \emph{типы}, чтобы отфильтровать бессмысленные программы
-\end{itemize}
-\vspace{0.5cm}
-Диалекты: Standart ML, OCaml, F\#, \textcolor{ForestGreen}{Haskell}, Scala
-\end{frame}
-
-\begin{frame}{Некоторые отличительные собенности...}
-\begin{itemize}
- \item Алгебраические типы данных (algebraic datatypes, variant types, discrimintated unions)
- \item Сопоставление с образцом (pattern matching)
- \item Строгая статическая типизация
- \item Легкое  написание DSL используя \emph{комбинаторы}
- \item Автоматический вывод типов
-\end{itemize}
-\end{frame}
-
-\begin{frame}{...которые перетягивают в известные языки}
-С++, C\#, Java, ..., Scala\faQuestion \faExclamation,
-\\
-\centering{\includegraphics[scale=0.3]{img/lipstick-on-a-pig.jpg}}
-\end{frame}
-
-
 \section{Типы}
+
+\begin{frame}[fragile]{А что такое тип?}
+% \pause
+~\ Ну, если $x$ принадлежит типу \inline=T=, то \inline=T= определяет, какие значения может принимать $x$.
+\\ \vspace{0.5cm} %\pause
+~\ \emph{Тип} \inline=T= у $x$ -- это \sout{множество} совокупность значений, которые могут быть у $x$.
+\vspace{0.5cm} \\ %\pause
+~\  Если \inline=x :: T=, то тип \inline=T= \emph{населен} иксом.
+\\ \vspace{0.5cm} %\pause
+~\ Если $\nexists$ \inline=x=, таких что \inline=x :: T=, то тип \inline=T= \emph{не населен}.
+\end{frame}
 
 \begin{frame}[fragile]{Синтаксис типов в Haskell (1/2)}
 ~\ \emph{Тип функции}, действующей из аргумента типа \hsinline{A} и возвращающей результат \hsinline{B}, обозначается как \hsinline{A->B}.
 \\ \pause
-~\ Функции, у которых $n$ аргументов ($n>1$) моделируются как функции возвращающие функцию от $n-1$ аргументов. Например, \hsinline{A->(B->C)}. 
-
-\pause Ассоциативность правая
-
+~\ Функции, у которых $n$ аргументов ($n>1$) моделируются как функции возвращающие функцию от $n-1$ аргументов. Например, \hsinline{A->(B->C)}. \\
+\pause 
+\vspace{1cm}
+Ассоциативность правая:
 \begin{hslisting}
-A -> (B -> C)  $\cong$ A -> B -> C
-
-1Il
+A -> (B -> C) 
+\end{hslisting}
+то же самое, что и
+\begin{hslisting}
+A -> B -> C
 \end{hslisting}
 \end{frame}
 
 
 \begin{frame}{Синтаксис типов в Haskell (2/2)}
+~\ \emph{Параметрический полиморфизм} -- когда один и тот же код, работает для разных типов
+(generics в Java/C\#).
+\\
+~\ Ещё бывает \emph{ad-hoc полиморфизм} -- работает разный код для разных типов (overloading в С++). Но это потом.
+\\
 ~\ \emph{Типовые переменные} в типах полиморфных функций пишутся с маленькой буквы. Например, \inline{a -> b} или \inline{a -> b -> c} или 
 \inline=a -> (a -> b) $ $ -> b=
 \vspace{0.5cm} 
@@ -226,15 +186,23 @@ A -> (B -> C)  $\cong$ A -> B -> C
 ~\ Когда какое-то имя \emph{типизируется как}(\emph{имеет тип}) \inline=T=, то это записывают так: \inline=x :: T=.
 \end{frame}
 
-\begin{frame}[fragile]{А что такое тип?}
-% \pause
-~\ Ну, если $x$ принадлежит типу \inline=T=, то \inline=T= определяет, какие значения может принимать $x$.
-\\ \vspace{0.5cm} %\pause
-~\ \emph{Тип} \inline=T= у $x$ -- это \sout{множество} совокупность значений, которые могут быть у $x$.
-\vspace{0.5cm} \\ %\pause
-~\  Если \inline=x :: T=, то тип \inline=T= \emph{населен} иксом.
-\\ \vspace{0.5cm} %\pause
-~\ Если $\nexists$ \inline=x=, таких что \inline=x :: T=, то тип \inline=T= \emph{не населен}.
+\begin{frame}[fragile]{Примеры параметрического полиморфизма}
+\begin{hslisting}
+Prelude> let id x = x
+Prelude> :t id
+id :: p -> p
+\end{hslisting}
+\pause
+\begin{hslisting}
+Prelude> :t (id :: String -> String)
+(id :: String -> String) :: String -> String
+\end{hslisting}
+\pause
+\begin{hslisting}
+Prelude> :t (id :: Int -> Int)
+(id :: Int -> Int) :: Int -> Int
+\end{hslisting}
+{\Large \faQuestion} Каков \textit{наиболее общий тип} для \inline=id=?
 \end{frame}
 
 \begin{frame}[fragile]{Примеры типов}
@@ -255,10 +223,13 @@ Prelude> :t ()
 
 \begin{frame}[fragile]{Как ведет себя функция с типом}
 
-{\Large \faQuestion} \inline=Void -> Int= \\
-\vspace{1cm}
-{\large \faQuestion} \inline=a -> ()= \\
+{\Large \faQuestion} \hsinline=Void -> Int= \\
 \vspace{0.5cm}
+{\Large \faQuestion} \hsinline=()  -> Int= \\
+\vspace{0.5cm}
+{\large \faQuestion} \hsinline=a -> ()= \\
+\vspace{0.5cm}
+\pause
 Ответ:
 \begin{hslisting}
 unit x = ()
@@ -267,7 +238,7 @@ unit _ = ()
 \end{hslisting}
 \end{frame}
 
-\begin{frame}[fragile]{Тип пары}
+\begin{frame}[fragile]{Тип пары (Декартово произведение)}
 \begin{center}
 \begin{tikzpicture}[commutative diagrams/every diagram]
 \node (P1) at (90:0cm) {\inline=(a,b)=};
@@ -279,7 +250,8 @@ unit _ = ()
 ;
 \end{tikzpicture}
 \end{center}
-
+\pause
+Определим \textit{проекции}:
 \begin{hslisting}
 Prelude> let fst (x,_) = x
 Prelude> :t fst
@@ -292,26 +264,26 @@ snd :: (a, b) -> b
 
 \end{frame}
 
-\begin{frame}[fragile]{1}
+\begin{frame}[fragile]{Произведение (product)}
 \begin{center}
 \begin{tikzpicture}[commutative diagrams/every diagram]
-\node (P0) at (90:2.3cm) {$P$};
+\node (P0) at (90:2.3cm) {\inline=product?=};
 \node (P1) at (90:0cm) {$(a,b)$};
-\node (P2) at (90+ 90+35:3cm) {\makebox[1ex][l]{a}};
-\node (P3) at (90+270-35:3cm) {\makebox[1ex][r]{b}};
-% \node (P4) at (90+4*72:2cm) {ab2};
+\node (P2) at (90+ 90+35:3cm) {\inline=a=};
+\node (P3) at (90+270-35:3cm) {\inline=b=};
 \path[commutative diagrams/.cd, every arrow, every label]
-(P0) edge node[swap] {$m$} (P1)
-(P1) edge node[swap] {$fst$} (P2)
-(P1) edge node[swap] {$snd$} (P3)
-% (P2) edge node {$\phi\otimes 1$} (P3)
-(P0) edge[bend right] node[swap] {$fst'$} (P2)
-(P0) edge[bend left]  node[swap] {$snd'$} (P3)
-% (P4) edge node {$\phi$} (P3)
-% (P0) edge node {$\phi$} (P4)
+(P0) edge node[swap] {\mbox{\Large $\exists!$} \inline=m=} (P1)
+(P1) edge node[swap] {\inline=fst=} (P2)
+(P1) edge node[swap] {\inline=snd=} (P3)
+(P0) edge[bend right] node[swap] {\inline=fst2=} (P2)
+(P0) edge[bend left]  node[swap] {\inline=snd2=} (P3)
 ;
 \end{tikzpicture}
 \end{center}
+\begin{hslisting}
+fst2 = m . fst
+snd2 = m . snd
+\end{hslisting}
 \end{frame}
 
 % https://repl.it/languages/haskell
