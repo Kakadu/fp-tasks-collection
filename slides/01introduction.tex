@@ -2,113 +2,13 @@
 \usetheme{CambridgeUS}
 \beamertemplatenavigationsymbolsempty % remove navigation bar
 
-\usepackage{xcolor}
-\definecolor{YellowGreen} {HTML}{B5C28C}
-\definecolor{ForestGreen} {HTML}{009B55}
-\definecolor{MyBackground}{HTML}{F0EDAA}
+\input{heading.tex}
 
 
-\usepackage{xltxtra} % load xunicode
-\usepackage{polyglossia}
-\setmainlanguage{russian}
-\setotherlanguage{english}
+\title[Занятие 1: типы]{Типы в функциональном программировании}
+\author{Косарев Дмитрирй a.k.a. Kakadu}
 
-\let\cyrillicfonttt\monofamily
-\newfontfamily\dejaVuSansMono{DejaVu Sans Mono}
-% https://github.com/vjpr/monaco-bold/raw/master/MonacoB/MonacoB.otf
-\newfontfamily\monacoB{MonacoB}
-
-\usepackage{listings}
-\lstdefinestyle{style1}{
-  language=haskell,
-  numbers=left,
-  stepnumber=1,
-  numbersep=10pt,
-  tabsize=4,
-  showspaces=false,
-  showstringspaces=false
-}
-\lstdefinestyle{hsstyle1}
-{ language=haskell
-         , basicstyle=\monacoB
-         , deletekeywords={Int,Float,String,List,Void}
-         , breaklines=true
-         , columns=fullflexible
-         , commentstyle=\color{ForestGreen}
-         , escapeinside=§§
-         , escapebegin=\begin{russian}\commentfont
-         , escapeend=\end{russian}
-         , commentstyle=\color{ForestGreen}
-         , escapeinside=§§
-         , escapebegin=\begin{russian}\monacoB\color{ForestGreen}
-         , escapeend=\end{russian}
-         , mathescape=true
-%          , backgroundcolor = \color{MyBackground}
-}
-
-\newcommand{\inline}[1]{\lstinline{haskell}{#1}}
-\def\hsinline{\lstinline[style={hsstyle1}]}
-\def\inline{\hsinline}
-
-\lstnewenvironment{hslisting} {
-    \lstset { style={hsstyle1} }
-  }
-  {}
-  
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
-\setmainfont[
- Ligatures=TeX,
- Extension=.otf,
- BoldFont=cmunbx,
- ItalicFont=cmunti,
- BoldItalicFont=cmunbi,
-]{cmunrm}
-% С засечками (для заголовков)
-\setsansfont[
- Ligatures=TeX,
- Extension=.otf,
- BoldFont=cmunsx,
- ItalicFont=cmunsi,
-]{cmunss}
-% \setmonofont[Scale=0.6]{Monaco}
-
-\usefonttheme{professionalfonts}
-\usepackage{times}
-\usepackage{tikz}
-\usetikzlibrary{cd}
-% \usepackage{tikz-cd}
-\usepackage{amsmath}
-%\DeclareMathOperator{->}{\rightarrow}
-\newcommand\iso{\ensuremath{\cong}}
-\usepackage{verbatim}
-\usepackage{graphicx}
-\usetikzlibrary{arrows,shapes}
-
-\usepackage{fontawesome}
-% \newfontfamily{\FA}{Font Awesome 5 Free} % some glyphs missing
-\expandafter\def\csname faicon@facebook\endcsname{{\FA\symbol{"F09A}}}
-\def\faQuestionSign{{\FA\symbol{"F059}}}
-\def\faQuestion{{\FA\symbol{"F128}}}
-\def\faExclamation{{\FA\symbol{"F12A}}}
-\def\faUploadAlt{{\FA\symbol{"F093}}}
-\def\faLemon{{\FA\symbol{"F094}}}
-\def\faPhone{{\FA\symbol{"F095}}}
-\def\faCheckEmpty{{\FA\symbol{"F096}}}
-\def\faBookmarkEmpty{{\FA\symbol{"F097}}}
-
-\newcommand{\faGood}{\textcolor{ForestGreen}{\faThumbsUp}}
-\newcommand{\faBad}{\textcolor{red}{\faThumbsODown}}
-
-\usepackage{soul} % for \st that strikes through
-\usepackage[normalem]{ulem} % \sout
-
-% \usepackage{minted}
-% \newcommand{\inline}[1]{\mintinline{haskell}{#1}}
-
-\title[Part of thesis title]{Функциональщина}
-\author{Kakadu}
-
-\institute{St Petersburg University}
+\institute{матмех СПбГУ}
 
 \date{\today}
 
@@ -121,7 +21,7 @@
 }
 
 \begin{document}
-% \maketitle
+\maketitle
 
 % For every picture that defines or uses external nodes, you'll have to
 % apply the 'remember picture' style. To avoid some typing, we'll apply
@@ -137,10 +37,8 @@
 %   \tableofcontents
 % \end{frame}
 
-\section{Типы}
-
-\begin{frame}[fragile]{А что такое тип?}
-% \pause
+\begin{frame}[fragile]{Вопрос к залу: что такое тип?}
+\pause
 ~\ Ну, если $x$ принадлежит типу \inline=T=, то \inline=T= определяет, какие значения может принимать $x$.
 \\ \vspace{0.5cm} %\pause
 ~\ \emph{Тип} \inline=T= у $x$ -- это \sout{множество} совокупность значений, которые могут быть у $x$.
@@ -174,13 +72,13 @@ A -> B -> C
 ~\ Ещё бывает \emph{ad-hoc полиморфизм} -- работает разный код для разных типов (overloading в С++). Но это потом.
 \\
 ~\ \emph{Типовые переменные} в типах полиморфных функций пишутся с маленькой буквы. Например, \inline{a -> b} или \inline{a -> b -> c} или 
-\inline=a -> (a -> b) $ $ -> b=
+\hsinline=a -> (a -> b) -> b=
 \vspace{0.5cm} 
 \\ \pause
 ~\ \emph{Имена типов} пишутся с заглавной буквы. Например,  \inline=Int=, \inline=String=, \inline=Float=.
 \vspace{0.5cm} 
 \\ \pause
-~\ \emph{Типы с параметрами}: \inline=List Int=, \inline=List String=, \inline=List a=, и т.д. 
+~\ \emph{Применение типов}: \inline=List Int=, \inline=List String=, \inline=List a=, и т.д.
 \vspace{0.5cm} 
 \\ \pause
 ~\ Когда какое-то имя \emph{типизируется как}(\emph{имеет тип}) \inline=T=, то это записывают так: \inline=x :: T=.
@@ -264,7 +162,7 @@ snd :: (a, b) -> b
 
 \end{frame}
 
-\begin{frame}[fragile]{Произведение (product)}
+\begin{frame}[fragile]{Произведение (product) -- обобщение пары}
 \begin{center}
 \begin{tikzpicture}[commutative diagrams/every diagram]
 \node (P0) at (90:2.3cm) {\inline=product?=};
@@ -272,7 +170,7 @@ snd :: (a, b) -> b
 \node (P2) at (90+ 90+35:3cm) {\inline=a=};
 \node (P3) at (90+270-35:3cm) {\inline=b=};
 \path[commutative diagrams/.cd, every arrow, every label]
-(P0) edge node[swap] {\mbox{\Large $\exists!$} \inline=m=} (P1)
+(P0) edge node[swap] {\mbox{\Large $\exists!$} \inline=f=} (P1)
 (P1) edge node[swap] {\inline=fst=} (P2)
 (P1) edge node[swap] {\inline=snd=} (P3)
 (P0) edge[bend right] node[swap] {\inline=fst2=} (P2)
@@ -281,11 +179,113 @@ snd :: (a, b) -> b
 \end{tikzpicture}
 \end{center}
 \begin{hslisting}
-fst2 = m . fst
-snd2 = m . snd
+fst2 = fst . f
+snd2 = snd . f
 \end{hslisting}
 \end{frame}
 
 % https://repl.it/languages/haskell
+
+\begin{frame}[fragile]{Coproduct или Either или тип-сумма}
+\begin{center}
+\begin{tikzpicture}[commutative diagrams/every diagram]
+\node (P0) at (270:1.5cm) {\inline=coproduct?=};
+\node (P1) at (90:0cm) {\inline=a+b=};
+\node (P2) at (165:3cm) {\inline=a=};
+\node (P3) at (15:3cm)  {\inline=b=};
+\path[commutative diagrams/.cd, every arrow, every label]
+(P1) edge node[swap] {\mbox{\Large $\exists!$} \inline=g=} (P0)
+(P2) edge node[swap] {\inline=left= } (P1)
+(P3) edge node[swap] {\inline=right=} (P1)
+(P2) edge[bend right] node[swap] {\inline=l2=} (P0)
+(P3) edge[bend left]  node[swap] {\inline=r2=} (P0)
+;
+\end{tikzpicture}
+\end{center}
+\begin{hslisting}
+l2 = g . left
+r2 = g . right
+
+Prelude> :i Either
+data Either a b = Left a | Right b      
+-- Defined in 'Data.Either'
+\end{hslisting}
+\end{frame}
+
+\begin{frame}[fragile]{Упражнения про произведение и сумму}
+\begin{itemize}
+ \item Придумайте (нагуглите) какой-нибудь тип, который похож на произведение? Реализуйте для него функцию $f$.
+ \item Придумайте (нагуглите) какой-нибудь тип, который похож на копроизведение? Реализуйте для него функцию $g$.
+ \item Кто населяет тип \hsinline=(Void, a)= для произвольного типа \hsinline=a=?
+ \item Кто населяет тип \hsinline=((), a)= для произвольного типа \hsinline=a=?
+ \item Кто населяет тип \hsinline=Either Void a= для произвольного типа \hsinline=a=?
+ \item Кто населяет тип \myinline=Either ()   a= для произвольного типа \hsinline=a=?
+ \item В некоторых упражнениях выше можно строит взаимно однозначное соответствие между двумя типами. Сообразите между какими и постройте там, где возможно.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Алгебраические типы данных (1/2)}
+Синтаксис
+ \begin{lstlisting}[mathescape=true,language=haskell]
+  data TypeName $arg_1$ $arg_2$ ... $arg_k$ = 
+    | $C_1$ $t_{11}$ $t_{12}$ ... $t_{1n_1}$ 
+    | $C_2$ $t_{21}$ $t_{22}$ ... $t_{2n_2}$ 
+    | ...
+    | $C_m$ $t_{m1}$ $t_{m2}$ ... $t_{mn_m}$ 
+ \end{lstlisting}
+ Примеры
+ \begin{itemize}
+  \item \hsinline!data Bool    = True | False!
+  \item \hsinline!data Status1 = On   | Off!
+  \item \hsinline!data Maybe a = Just a | Nothing!
+  \item \hsinline!data Either a b = Left a | Right b!
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Алгебраические типы данных (2/2)}
+
+{\Large \faQuestion} Что такое \textit{связный список}?\\ \pause
+{\Large \faQuestion} А что такое \textit{список} вообще?\\ \pause
+\vspace{1cm}
+Ещё примеры:
+\begin{itemize}
+  \item \hsinline!data [] a = [] | a : [a]!
+  \item \hsinline!data ListG a r = Nil | Cons a r!
+  \item \hsinline!data Fix f = Fix (f (Fix f))! 
+\end{itemize}
+\vspace{1cm}
+Упражнение: из типов \hsinline=ListG= и \hsinline=Fix= можно соорудить что-то похожее на стандартный список Haskell. Предъявите биекцию.
+\end{frame}
+
+\begin{frame}[fragile]{Как может работать функция со следующим типом?}
+\begin{itemize}
+ \item [{\Large \faQuestion}] \hsinline=[a] -> [a]=
+ \item [{\Large \faQuestion}] \hsinline=[a] -> Bool=
+ \item [{\Large \faQuestion}] \hsinline=(a -> b) -> [a] -> [b]=
+ \item [{\Large \faQuestion}] \hsinline=(a -> a -> Bool) -> [a] -> [a]=
+ \item [{\Large \faQuestion}] \hsinline=(a -> a -> Cmp) -> [a] -> [a]=, если
+\begin{hslisting}
+Prelude> :i Ordering
+data Ordering = LT | EQ | GT   
+\end{hslisting}
+ \item [{\Large \faQuestion}] \hsinline=(a -> b -> a) -> a -> [b] -> a=
+ \item [{\Large \faQuestion}] \hsinline=Maybe a -> Maybe b -> (a -> b -> c) -> Maybe c=
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{TODO: аксиомы}
+Distinctness: $C_{j}(x) \neq C_{i}(y)$ если $j \neq i$\\
+% https://hal.inria.fr/hal-01212585/document
+Injectivity:
+$C_{ij}(x_1,...,x_{n_{ij}}) = C_{ij}(y_1,...,y_{n_{ij}}) \Rightarrow x_k = y_k$
+
+Exhaustiveness:
+$d_{i1}(x) \wedge ... \wedge d_{im_i}(x)$ ????
+
+Selection:
+$s^k_{ij}(C_{ij}(x1,...,x_{n_{ij}}) = x$
+
+\end{frame}
 
 \end{document}
