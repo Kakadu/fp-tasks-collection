@@ -66,11 +66,11 @@ A -> B -> C
 
 
 \begin{frame}{Синтаксис типов в Haskell (2/2)}
-~\ \emph{Параметрический полиморфизм} -- когда один и тот же код, работает для разных типов
-(generics в Java/C\#).
-\\
+~\ \emph{Параметрический полиморфизм} -- когда один и тот же код, работает для 
+разных типов (generics в Java/C\#).
+\\ \pause
 ~\ Ещё бывает \emph{ad-hoc полиморфизм} -- работает разный код для разных типов (overloading в С++). Но это потом.
-\\
+\\ \pause
 ~\ \emph{Типовые переменные} в типах полиморфных функций пишутся с маленькой буквы. Например, \inline{a -> b} или \inline{a -> b -> c} или 
 \hsinline=a -> (a -> b) -> b=
 \vspace{0.5cm} 
@@ -78,10 +78,22 @@ A -> B -> C
 ~\ \emph{Имена типов} пишутся с заглавной буквы. Например,  \inline=Int=, \inline=String=, \inline=Float=.
 \vspace{0.5cm} 
 \\ \pause
-~\ \emph{Применение типов}: \inline=List Int=, \inline=List String=, \inline=List a=, и т.д.
-\vspace{0.5cm} 
-\\ \pause
 ~\ Когда какое-то имя \emph{типизируется как}(\emph{имеет тип}) \inline=T=, то это записывают так: \inline=x :: T=.
+\end{frame}
+
+\begin{frame}{Применение типов}
+~\ \emph{Применение типов(type application)}: \inline=List Int=, \inline=List String=, \inline=List a=, и т.д. \\
+\vspace{1cm}
+(Тут должна быть картинка)
+ 
+\end{frame}
+
+\begin{frame}{Чем функции в программировании отличаются от математических?}
+ \pause
+ \begin{itemize}
+  \item Аварийное завершение
+  \item Отсутствие завершения
+ \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Примеры параметрического полиморфизма}
@@ -100,6 +112,7 @@ Prelude> :t (id :: String -> String)
 Prelude> :t (id :: Int -> Int)
 (id :: Int -> Int) :: Int -> Int
 \end{hslisting}
+\pause
 {\Large \faQuestion} Каков \textit{наиболее общий тип} для \inline=id=?
 \end{frame}
 
@@ -220,7 +233,7 @@ data Either a b = Left a | Right b
  \item Кто населяет тип \hsinline=((), a)= для произвольного типа \hsinline=a=?
  \item Кто населяет тип \hsinline=Either Void a= для произвольного типа \hsinline=a=?
  \item Кто населяет тип \myinline=Either ()   a= для произвольного типа \hsinline=a=?
- \item В некоторых упражнениях выше можно строит взаимно однозначное соответствие между двумя типами. Сообразите между какими и постройте там, где возможно.
+ \item В некоторых упражнениях выше можно строить изоморфизм между двумя типами. Сообразите между какими и постройте там, где возможно.
 \end{itemize}
 
 \end{frame}
@@ -255,8 +268,27 @@ data Either a b = Left a | Right b
   \item \hsinline!data Fix f = Fix (f (Fix f))! 
 \end{itemize}
 \vspace{1cm}
-Упражнение: из типов \hsinline=ListG= и \hsinline=Fix= можно соорудить что-то похожее на стандартный список Haskell. Предъявите биекцию.
+Упражнение: из типов \hsinline=ListG= и \hsinline=Fix= можно соорудить что-то похожее на стандартный список Haskell. Предъявите изоморфизм.
 \end{frame}
+
+\begin{frame}[fragile]{Формальные аксиомы}
+Distinctness: $C_{j}(x) \neq C_{i}(y)$, если $j \neq i$\\
+% https://hal.inria.fr/hal-01212585/document
+\vspace{1cm}
+Injectivity:
+$C_{ij}(x_1,...,x_{n_{ij}}) = C_{ij}(y_1,...,y_{n_{ij}}) \Rightarrow x_k = y_k$\\
+\vspace{1cm}
+Exhaustiveness: \hsinline=x :: ADT= 
+$\Rightarrow \exists i, n$: $x = C_i(y_1,...,y_n)$\\
+\vspace{1cm}
+Selection:
+$s^k_{ij}(C_{ij}(x_1,...,x_{n_{ij}}) = x$
+\end{frame}
+
+\begin{frame}
+~\ Упражнение. Для типов, указанных выше, можно построить изоморфные к ним, используя только типы \inline=()=, \inline=Void=, \inline=Either a b=, \inline=(a,b)= (ну и ещё либо рекурсию, либо \inline=Fix=). Попробуйте описать эти типы, предъявляя изоморфизм.
+\end{frame}
+
 
 \begin{frame}[fragile]{Как может работать функция со следующим типом?}
 \begin{itemize}
@@ -264,7 +296,7 @@ data Either a b = Left a | Right b
  \item [{\Large \faQuestion}] \hsinline=[a] -> Bool=
  \item [{\Large \faQuestion}] \hsinline=(a -> b) -> [a] -> [b]=
  \item [{\Large \faQuestion}] \hsinline=(a -> a -> Bool) -> [a] -> [a]=
- \item [{\Large \faQuestion}] \hsinline=(a -> a -> Cmp) -> [a] -> [a]=, если
+ \item [{\Large \faQuestion}] \hsinline=(a -> a -> Ordering) -> [a] -> [a]=, если
 \begin{hslisting}
 Prelude> :i Ordering
 data Ordering = LT | EQ | GT   
@@ -274,18 +306,5 @@ data Ordering = LT | EQ | GT
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{TODO: аксиомы}
-Distinctness: $C_{j}(x) \neq C_{i}(y)$ если $j \neq i$\\
-% https://hal.inria.fr/hal-01212585/document
-Injectivity:
-$C_{ij}(x_1,...,x_{n_{ij}}) = C_{ij}(y_1,...,y_{n_{ij}}) \Rightarrow x_k = y_k$
-
-Exhaustiveness:
-$d_{i1}(x) \wedge ... \wedge d_{im_i}(x)$ ????
-
-Selection:
-$s^k_{ij}(C_{ij}(x1,...,x_{n_{ij}}) = x$
-
-\end{frame}
 
 \end{document}
