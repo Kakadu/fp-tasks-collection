@@ -1,10 +1,12 @@
-\documentclass{beamer}
+\documentclass[
+  xcolor={svgnames},
+  hyperref={colorlinks,citecolor=DeepPink4,linkcolor=DarkRed,urlcolor=DarkBlue}]{beamer}
 \usetheme{CambridgeUS}
 \beamertemplatenavigationsymbolsempty % remove navigation bar
 
-\input{heading2.tex}
+\input{heading.tex}
 
-\title[Занятие 2]{Пользовательские типы дынных}
+\title[Занятие 2]{Пользовательские типы данных}
 \author{Косарев Дмитрий a.k.a. Kakadu}
 
 \institute{матмех СПбГУ}
@@ -19,6 +21,8 @@
   \end{frame}
 }
 
+\newcommand{\verbatimfont}[1]{\def\verbatim@font{#1}}
+\usepackage{verbatimbox}
 \begin{document}
 \maketitle
 
@@ -36,8 +40,99 @@
 %   \tableofcontents
 % \end{frame}
 
-\begin{frame}[fragile]{Синтаксис типов в Haskell (1/2)}
+\begin{frame}[fragile]{Натуральные числа в стиле Пеано}
+Положим у нас есть ``ноль'' (ну или ``один'') и есть ``следующий''.
+\pause
 \begin{hslisting}
+data Nat = Zero | Succ Nat
+\end{hslisting}
+\pause
+Простые упражнения: сложить или умножить пару чисел Пеано.
+\end{frame}
+
+\begin{frame}[fragile]{JSON}
+\begin{itemize}
+ \item true и false
+ \item числа
+ \item строки
+ \item null
+ \item массивы
+ \item Объекты как набор пар ``ключ-значение''
+\end{itemize}
+\pause
+\begin{verbnobox}[\monacoB]
+data JSON = 
+            JNull
+          | JBool Bool
+          | JNum   Float
+          | JStr   String
+          | JArray [JSON]
+          | JObj   [(String, JSON)]
+\end{verbnobox}
+\end{frame}
+
+\begin{frame}[fragile]{Простой пример: арифметика (1/2)}
+\begin{verbnobox}[\monacoB]
+data Expr =
+    EConst Int
+  | EMul Expr Expr
+  | EAdd Expr Expr
+  deriving Show
+\end{verbnobox}
+\begin{verbnobox}[\monacoB]
+eval :: Expr -> Int
+\end{verbnobox}
+\pause
+\begin{verbnobox}[\monacoB]
+eval (EConst n) = n
+eval (EAdd l r) = (eval l) + (eval r)
+eval (EMul l r) = (eval l) * (eval r)
+\end{verbnobox}
+\end{frame}
+
+\begin{frame}[fragile]{Простой пример: арифметика (2/2)}
+\begin{verbnobox}[\monacoB]
+e1 :: Expr
+e1 = EMul (EAdd (EConst 1) (EConst 2)) (EConst 3)
+
+e2 = (1 + 2) * 3
+\end{verbnobox}
+\pause
+\begin{verbnobox}[\monacoB]
+*Main> :l Arith
+*Main> eval e1
+9
+*Main> e1
+EMul (EAdd (EConst 1) (EConst 2)) (EConst 3)
+\end{verbnobox}
+\vspace{1cm}
+\textit{Deep embedding} vs. \textit{shallow embedding}
+\end{frame}
+
+\begin{frame}[fragile]{Арифметика с переменными}
+\begin{verbnobox}[\monacoB]
+data Expr = 
+    EConst Int
+  | EMul Expr Expr
+  | EAdd Expr Expr
+  | EVar String
+ 
+eval :: [(String,Int)] -> Expr -> Maybe Int
+\end{verbnobox}
+\pause
+\begin{verbnobox}[\monacoB]
+eval _ (EConst n) = Just n
+eval env (EAdd l r) = 
+  Just ((eval env l) + (eval env r))
+eval env (EMul l r) = 
+  Just ((eval env l) * (eval env r))
+eval env (EVar s) = lookup s env 
+\end{verbnobox}
+\end{frame}
+
+\begin{frame}[fragile]{Содержательный пример (1/3)}
+\begin{verbnobox}[\monacoB]
+import Data.Word
 data InetAddr = InetAddr Word8 Word8 Word8 Word8
 
 data ConnectionState = 
@@ -52,319 +147,136 @@ data ConnectionInfo = CInfo
   , when_initiated ::          Maybe Time
   , when_disconnected ::       Maybe Time
   } 
-\end{hslisting}
+\end{verbnobox}
 \end{frame}
 
-\begin{frame}[fragile]{?}
-\begin{hslisting}
+\begin{frame}[fragile]{Содержательный пример (2/3)}
+\begin{verbnobox}[\monacoB]
 data Connecting = 
   Connecting { when_initiated:: Time } 
 data Connected  = Connected 
   { last_ping  :: Maybe (Time,Int)
-  , session_id :: String   } 
+  , session_id :: String } 
 data Disconnected = 
-  Disconnected { when_disconnected:: Time } 
+  Disconnected { when_disconnected :: Time } 
  
 data ConnectionState = 
-  | SConnecting   Connecting 
+    SConnecting   Connecting 
   | SConnected    Connected 
   | SDisconnected Disconnected 
-\end{hslisting}
+\end{verbnobox}
 \end{frame}
 
-\begin{frame}[fragile]{?}
-\begin{hslisting}
+\begin{frame}[fragile]{Содержательный пример (3/3)}
+\begin{verbnobox}[\monacoB]
 data ConnectionState = 
-  | SConnecting   Connecting 
+    SConnecting   Connecting 
   | SConnected    Connected 
   | SDisconnected Disconnected 
  
 data ConnectionInfo = Cinfo 
   { state ::  ConnectionState
-  , server:: InetAddr } 
-\end{hslisting}
-\end{frame}
-
-\begin{frame}[fragile]{Простой пример: арифметика}
-\begin{hslisting}
-data Expr = 
-  | EConst Int
-  | EMul Expr Expr
-  | EAdd Expr Expr
- 
-eval :: Expr -> Int
-\end{hslisting}
+  , server :: InetAddr } 
+\end{verbnobox}
 \pause
-\begin{hslisting}
-eval (EConst n) = n
-eval (EAdd l r) = (eval l) + (eval r)
-eval (EMul l r) = (eval l) * (eval r)
-\end{hslisting}
-
+Лозунг: ``плохие'' состояния (значения) должны быть непредставимы в типах.
 \end{frame}
 
-\begin{frame}[fragile]{Арифметика с переменными}
-\begin{hslisting}
-data Expr = 
-  | EConst Int
-  | EMul Expr Expr
-  | EAdd Expr Expr
-  | EVar String
- 
-eval :: [(String,Int)] -> Expr -> Maybe Int
-\end{hslisting}
+\begin{frame}[fragile]{Пример про почту (1/2)}
+\begin{verbnobox}[\monacoB]
+data Contact = Contact 
+    { name :: Name
+    , emailContactInfo :: EmailContactInfo
+    , postalContactInfo :: PostalContactInfo }
+\end{verbnobox}
 \pause
+Хочется, чтобы у контакта был \textit{хотя бы один} адрес: либо электронной, либо физической почты.
+\pause
+Что вы думаете о вот таком?
 \begin{hslisting}
-eval _ (EConst n) = Just n
-eval env (EAdd l r) = 
-  Just ((eval env l) + (eval env r))
-eval env (EMul l r) = 
-  Just ((eval env l) * (eval env r))
-eval env (EVar s) = lookup s env 
+data Contact = Contact 
+    { name :: Name
+    , emailContactInfo :: Maybe EmailContactInfo
+    , postalContactInfo :: Maybe PostalContactInfo }
 \end{hslisting}
-
 \end{frame}
 
-% \begin{frame}{Синтаксис типов в Haskell (2/2)}
-% ~\ \emph{Параметрический полиморфизм} -- когда один и тот же код, работает для 
-% разных типов (generics в Java/C\#).
-% \\ \pause
-% ~\ Ещё бывает \emph{ad-hoc полиморфизм} -- работает разный код для разных типов (overloading в С++). Но это потом.
-% \\ \pause
-% ~\ \emph{Типовые переменные} в типах полиморфных функций пишутся с маленькой буквы. Например, \inline{a -> b} или \inline{a -> b -> c} или 
-% \hsinline=a -> (a -> b) -> b=
-% \vspace{0.5cm} 
-% \\ \pause
-% ~\ \emph{Имена типов} пишутся с заглавной буквы. Например,  \inline=Int=, \inline=String=, \inline=Float=.
-% \vspace{0.5cm} 
-% \\ \pause
-% ~\ Когда какое-то имя \emph{типизируется как}(\emph{имеет тип}) \inline=T=, то это записывают так: \inline=x :: T=.
-% \end{frame}
-% 
-% \begin{frame}{Применение типов}
-% ~\ \emph{Применение типов(type application)}: \inline=List Int=, \inline=List String=, \inline=List a=, и т.д. \\
-% \vspace{1cm}
-% (Тут должна быть картинка)
-%  
-% \end{frame}
-% 
-% \begin{frame}{Чем функции в программировании отличаются от математических?}
-%  \pause
-%  \begin{itemize}
-%   \item Аварийное завершение
-%   \item Отсутствие завершения
-%  \end{itemize}
-% \end{frame}
-% 
-% \begin{frame}[fragile]{Примеры параметрического полиморфизма}
-% \begin{hslisting}
-% Prelude> let id x = x
-% Prelude> :t id
-% id :: p -> p
-% \end{hslisting}
-% \pause
-% \begin{hslisting}
-% Prelude> :t (id :: String -> String)
-% (id :: String -> String) :: String -> String
-% \end{hslisting}
-% \pause
-% \begin{hslisting}
-% Prelude> :t (id :: Int -> Int)
-% (id :: Int -> Int) :: Int -> Int
-% \end{hslisting}
-% \pause
-% {\Large \faQuestion} Каков \textit{наиболее общий тип} для \inline=id=?
-% \end{frame}
-% 
-% \begin{frame}[fragile]{Примеры типов}
-% Тип, который не населен
-% \begin{hslisting}
-% Prelude> :i Data.Void.Void
-% data Data.Void.Void        -- Defined in 'Data.Void'
-% \end{hslisting}
-% 
-% Тип, у которого только один житель
-% \begin{hslisting}
-% Prelude> :i ()
-% data () = ()               -- Defined in 'GHC.Tuple'
-% Prelude> :t ()
-% () :: ()
-% \end{hslisting}
-% \end{frame}
-% 
-% \begin{frame}[fragile]{Как ведет себя функция с типом}
-% 
-% {\Large \faQuestion} \hsinline=Void -> Int= \\
-% \vspace{0.5cm}
-% {\Large \faQuestion} \hsinline=()  -> Int= \\
-% \vspace{0.5cm}
-% {\large \faQuestion} \hsinline=a -> ()= \\
-% \vspace{0.5cm}
-% \pause
-% Ответ:
-% \begin{hslisting}
-% unit x = ()
-% {- §а лучше§ -}
-% unit _ = ()
-% \end{hslisting}
-% \end{frame}
-% 
-% \begin{frame}[fragile]{Тип пары (Декартово произведение)}
-% \begin{center}
-% \begin{tikzpicture}[commutative diagrams/every diagram]
-% \node (P1) at (90:0cm) {\inline=(a,b)=};
-% \node (P2) at (90+ 90+35:2cm) {\inline=a=};
-% \node (P3) at (90+270-35:2cm) {\inline=b=};
-% \path[commutative diagrams/.cd, every arrow, every label]
-% (P1) edge node[swap] {\inline=fst=} (P2)
-% (P1) edge node[swap] {\inline=snd=} (P3)
-% ;
-% \end{tikzpicture}
-% \end{center}
-% \pause
-% Определим \textit{проекции}:
-% \begin{hslisting}
-% Prelude> let fst (x,_) = x
-% Prelude> :t fst
-% fst :: (a, b) -> a
-% 
-% Prelude> let snd (_,y) = y
-% Prelude> :t snd
-% snd :: (a, b) -> b
-% \end{hslisting}
-% 
-% \end{frame}
-% 
-% \begin{frame}[fragile]{Произведение (product) -- обобщение пары}
-% \begin{center}
-% \begin{tikzpicture}[commutative diagrams/every diagram]
-% \node (P0) at (90:2.3cm) {\inline=product?=};
-% \node (P1) at (90:0cm) {$(a,b)$};
-% \node (P2) at (90+ 90+35:3cm) {\inline=a=};
-% \node (P3) at (90+270-35:3cm) {\inline=b=};
-% \path[commutative diagrams/.cd, every arrow, every label]
-% (P0) edge node[swap] {\mbox{\Large $\exists!$} \inline=f=} (P1)
-% (P1) edge node[swap] {\inline=fst=} (P2)
-% (P1) edge node[swap] {\inline=snd=} (P3)
-% (P0) edge[bend right] node[swap] {\inline=fst2=} (P2)
-% (P0) edge[bend left]  node[swap] {\inline=snd2=} (P3)
-% ;
-% \end{tikzpicture}
-% \end{center}
-% \begin{hslisting}
-% fst2 = fst . f
-% snd2 = snd . f
-% \end{hslisting}
-% \end{frame}
-% 
-% % https://repl.it/languages/haskell
-% 
-% \begin{frame}[fragile]{Coproduct или Either или тип-сумма}
-% \begin{center}
-% \begin{tikzpicture}[commutative diagrams/every diagram]
-% \node (P0) at (270:1.5cm) {\inline=coproduct?=};
-% \node (P1) at (90:0cm) {\inline=a+b=};
-% \node (P2) at (165:3cm) {\inline=a=};
-% \node (P3) at (15:3cm)  {\inline=b=};
-% \path[commutative diagrams/.cd, every arrow, every label]
-% (P1) edge node[swap] {\mbox{\Large $\exists!$} \inline=g=} (P0)
-% (P2) edge node[swap] {\inline=left= } (P1)
-% (P3) edge node[swap] {\inline=right=} (P1)
-% (P2) edge[bend right] node[swap] {\inline=l2=} (P0)
-% (P3) edge[bend left]  node[swap] {\inline=r2=} (P0)
-% ;
-% \end{tikzpicture}
-% \end{center}
-% \begin{hslisting}
-% l2 = g . left
-% r2 = g . right
-% 
-% Prelude> :i Either
-% data Either a b = Left a | Right b      
-% -- Defined in 'Data.Either'
-% \end{hslisting}
-% \end{frame}
-% 
-% \begin{frame}[fragile]{Упражнения про произведение и сумму}
-% \begin{itemize}
-%  \item Придумайте (нагуглите) какой-нибудь тип, который похож на произведение? Реализуйте для него функцию $f$.
-%  \item Придумайте (нагуглите) какой-нибудь тип, который похож на копроизведение? Реализуйте для него функцию $g$.
-%  \item Кто населяет тип \hsinline=(Void, a)= для произвольного типа \hsinline=a=?
-%  \item Кто населяет тип \hsinline=((), a)= для произвольного типа \hsinline=a=?
-%  \item Кто населяет тип \hsinline=Either Void a= для произвольного типа \hsinline=a=?
-%  \item Кто населяет тип \myinline=Either ()   a= для произвольного типа \hsinline=a=?
-%  \item В некоторых упражнениях выше можно строить изоморфизм между двумя типами. Сообразите между какими и постройте там, где возможно.
-% \end{itemize}
-% 
-% \end{frame}
-% 
-% \begin{frame}[fragile]{Алгебраические типы данных (1/2)}
-% Синтаксис
-%  \begin{lstlisting}[mathescape=true,language=haskell]
-%   data TypeName $arg_1$ $arg_2$ ... $arg_k$ = 
-%     | $C_1$ $t_{11}$ $t_{12}$ ... $t_{1n_1}$ 
-%     | $C_2$ $t_{21}$ $t_{22}$ ... $t_{2n_2}$ 
-%     | ...
-%     | $C_m$ $t_{m1}$ $t_{m2}$ ... $t_{mn_m}$ 
-%  \end{lstlisting}
-%  Примеры
-%  \begin{itemize}
-%   \item \hsinline!data Bool    = True | False!
-%   \item \hsinline!data Status1 = On   | Off!
-%   \item \hsinline!data Maybe a = Just a | Nothing!
-%   \item \hsinline!data Either a b = Left a | Right b!
-%  \end{itemize}
-% \end{frame}
-% 
-% \begin{frame}[fragile]{Алгебраические типы данных (2/2)}
-% 
-% {\Large \faQuestion} Что такое \textit{связный список}?\\ \pause
-% {\Large \faQuestion} А что такое \textit{список} вообще?\\ \pause
-% \vspace{1cm}
-% Ещё примеры:
-% \begin{itemize}
-%   \item \hsinline!data [] a = [] | a : [a]!
-%   \item \hsinline!data ListG a r = Nil | Cons a r!
-%   \item \hsinline!data Fix f = Fix (f (Fix f))! 
-% \end{itemize}
-% \vspace{1cm}
-% Упражнение: из типов \hsinline=ListG= и \hsinline=Fix= можно соорудить что-то похожее на стандартный список Haskell. Предъявите изоморфизм.
-% \end{frame}
-% 
-% \begin{frame}[fragile]{Формальные аксиомы}
-% Distinctness: $C_{j}(x) \neq C_{i}(y)$, если $j \neq i$\\
-% % https://hal.inria.fr/hal-01212585/document
-% \vspace{1cm}
-% Injectivity:
-% $C_{ij}(x_1,...,x_{n_{ij}}) = C_{ij}(y_1,...,y_{n_{ij}}) \Rightarrow x_k = y_k$\\
-% \vspace{1cm}
-% Exhaustiveness: \hsinline=x :: ADT= 
-% $\Rightarrow \exists i, n$: $x = C_i(y_1,...,y_n)$\\
-% \vspace{1cm}
-% Selection:
-% $s^k_{ij}(C_{ij}(x_1,...,x_{n_{ij}}) = x$
-% \end{frame}
-% 
-% \begin{frame}
-% ~\ Упражнение. Для типов, указанных выше, можно построить изоморфные к ним, используя только типы \inline=()=, \inline=Void=, \inline=Either a b=, \inline=(a,b)= (ну и ещё либо рекурсию, либо \inline=Fix=). Попробуйте описать эти типы, предъявляя изоморфизм.
-% \end{frame}
-% 
-% 
-% \begin{frame}[fragile]{Как может работать функция со следующим типом?}
-% \begin{itemize}
-%  \item [{\Large \faQuestion}] \hsinline=[a] -> [a]=
-%  \item [{\Large \faQuestion}] \hsinline=[a] -> Bool=
-%  \item [{\Large \faQuestion}] \hsinline=(a -> b) -> [a] -> [b]=
-%  \item [{\Large \faQuestion}] \hsinline=(a -> a -> Bool) -> [a] -> [a]=
-%  \item [{\Large \faQuestion}] \hsinline=(a -> a -> Ordering) -> [a] -> [a]=, если
-% \begin{hslisting}
-% Prelude> :i Ordering
-% data Ordering = LT | EQ | GT   
-% \end{hslisting}
-%  \item [{\Large \faQuestion}] \hsinline=(a -> b -> a) -> a -> [b] -> a=
-%  \item [{\Large \faQuestion}] \hsinline=Maybe a -> Maybe b -> (a -> b -> c) -> Maybe c=
-% \end{itemize}
-% \end{frame}
+\begin{frame}[fragile]{Пример про почту (2/2)}
+\begin{verbnobox}[\monacoB]
+data ContactInfo = 
+    EmailOnly    EmailContactInfo
+  | PostOnly     PostalContactInfo
+  | EmailAndPost EmailContactInfo PostalContactInfo
 
+data Contact = Contact
+  { name        :: Name
+  , contactInfo :: ContactInfo
+  }
+\end{verbnobox}
+
+Если, посмотрев на тип, сразу понятно какие состояния корректные, а какие нет, то это считает хорошим дизайном.\\
+\vspace{0.5cm}
+Пример взят \href{https://fsharpforfunandprofit.com/posts/designing-with-types-making-illegal-states-unrepresentable/}{отсюда.}
+\end{frame}
+
+\begin{frame}[fragile]{Пример про длины (1/2)}
+\hsinline={- Measures.hs -}=
+\begin{verbnobox}[\monacoB]
+module Measures (Miles(), Kilometers, miles
+  , kilometers, addKilometers, addMiles) where
+
+data Miles = Mile Int
+data Kilometers = KM Int
+\end{verbnobox}
+\begin{verbnobox}[\monacoB]
+miles = Mile
+kilometers x = KM x
+\end{verbnobox}
+\begin{verbnobox}[\monacoB]
+addMiles :: Miles -> Miles -> Miles 
+addMiles (Mile x) (Mile y) = Mile (x+y)
+\end{verbnobox}
+\begin{verbnobox}[\monacoB]
+addKilometers :: Kilometers -> Kilometers -> 
+                 Kilometers
+addKilometers (KM x) (KM y) = KM (x+y)
+\end{verbnobox}
+\end{frame}
+
+\begin{frame}[fragile]{Пример про длины (2/2) }
+\hsinline={- Measures.hs -}=
+\begin{verbnobox}[\monacoB]
+import Measures
+
+x = (miles 1) `addMiles` (miles 2)
+\end{verbnobox}
+\pause
+\begin{verbnobox}[\monacoB]
+y :: Miles
+y = 1 `addMiles` (miles 2)
+{-
+  Long error message which requires a notion of 
+  type class to be understandable
+  |              
+8 | y = 1 `addMiles` (miles 2)
+  |     ^
+-}
+\end{verbnobox}
+Здесь запрещено случайно складывать числа с милями, а мили с километрами.
+\end{frame}
+
+\begin{frame}[fragile]{Домашнее упражнение про длины}
+%\hsinline={- Measures.hs -}=
+Сейчас у нас отдельная функция сложения для миль и отдельная километров. Сделайте одну функцию, которая берет две ``длины в одинаковой системе'' и выдает ``длину в такой же системе''.
+\vspace{1cm}
+
+Вам пригодятся знания:
+\begin{itemize}
+ \item код выше можно переиспользовать немного поменяв;
+ \item тип \hsinline=Void= можно описать вручную, он не встроенный;
+ \item типовые параметры могут использоваться в правой части, а могут и не использоваться;
+ \item \href{https://www.kinopoisk.ru/name/204813/}{фильмография} Луи де Фюнеса может подсказать какой термин из функционального программирования надо гуглить.
+\end{itemize}
+\end{frame}
 
 \end{document}
