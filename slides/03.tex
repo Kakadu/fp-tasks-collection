@@ -1,0 +1,96 @@
+\documentclass[
+  xcolor={svgnames},
+  hyperref={colorlinks,citecolor=DeepPink4,linkcolor=DarkRed,urlcolor=DarkBlue}]{beamer}
+\usetheme{CambridgeUS}
+\beamertemplatenavigationsymbolsempty % remove navigation bar
+
+\input{heading2.tex}
+
+\title[Занятие 3]{Несколько слов о несвязных темах}
+\author{Косарев Дмитрий a.k.a. Kakadu}
+
+\institute{матмех СПбГУ}
+
+\date{\today}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+\newcommand{\verbatimfont}[1]{\def\verbatim@font{#1}}
+\usepackage{verbatimbox}
+\begin{document}
+\maketitle
+
+% For every picture that defines or uses external nodes, you'll have to
+% apply the 'remember picture' style. To avoid some typing, we'll apply
+% the style to all pictures.
+\tikzstyle{every picture}+=[remember picture]
+
+% By default all math in TikZ nodes are set in inline mode. Change this to
+% displaystyle so that we don't get small fractions.
+\everymath{\displaystyle}
+
+% Uncomment these lines for an automatically generated outline.
+% \begin{frame}{Outline}
+%   \tableofcontents
+% \end{frame}
+
+\begin{frame}[fragile]{Несколько задачек про прокрастинирующие вычисления}
+\begin{itemize}
+ \item Построить бесконечный список чисел Фибоначчи \\ \href{https://www.haskell.org/hoogle/?hoogle=zipWith}{Подсказка}:\vspace{0.5cm}
+ \begin{verbnobox}[\monacoB]
+zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
+ \end{verbnobox}
+ \item Построить список простых чисел (решето Эратосфена)
+ \item Дан (бесконечный) список (бесконечных) списков. Сложить все элементы в один большой список. Ограничение: если элемент стоит в списке с конечным номером на позиции с конечным номером, то в результируюещем списке он должен быть наблюдаем на конечной позиции.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Жесткая задача про прокрастинирующие вычисления}
+Есть бинарное дерево со значениями только в листях и типом \pause
+\begin{verbnobox}[\monacoB] 
+data Tree a = Leaf a
+            | Node (Tree a) (Tree a)
+\end{verbnobox}
+Дано дерево типа \hsinline=Tree Int=. Нужно построить новое дерево такой же структуры, складывая в листья минимальный элемент исходного дерева
+\begin{itemize}
+ \item за 2 прохода
+ \item за 1 проход
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Логика высказываний}
+Формулы бывают:
+\begin{itemize}
+ \item Переменные: $a$, $b$, $c$ ...
+ \item Две логические константы
+ \item Отрицания формул:  $\neg a$, $\neg\neg b$ ...
+ \item Конъюнкции двух формул: $a \wedge b$, $\neg b \wedge c$ ...
+ \item Дизъюнкции двух формул: $a \vee b$, $\neg b \vee (c \vee d)$ ...
+ \item Имплицации двух формул: $a \supset b$, $\neg b \supset (c \supset d)$ ...
+\end{itemize}
+\pause
+Можно \textit{интерпретировать} синтаксические конструкции выше, придав смысл переменным, отрицанию и бинарным операциям. Google: логика высказываний, булева алгебра, таблица истинности.
+\end{frame}
+
+\begin{frame}[fragile]{Упражнения про логику высказываний}
+\begin{itemize}
+ \item Опишите тип данных \hsinline=data Formula = ...=
+ \item Дана формула и окружение, которое связывает переменные. Упростите формулу пока упрощается
+ \item Построить ДНФ по произвольной формуле
+ \item Построить КНФ по произвольной формуле
+ \item Дана формула с переменными. Проверить, что она истинная для любых значений переменных
+  \begin{itemize}
+   \item Можно решать перебором
+   \item Можно придумать что-то хитрое
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\end{document}

@@ -9,5 +9,8 @@ all:
 02.pdf: 02typedesign.tex
 	xelatex -shell-escape -interaction=nonstopmode $<
 
+03.pdf: 03.tex
+	xelatex -shell-escape -interaction=nonstopmode $<
+
 
 	
