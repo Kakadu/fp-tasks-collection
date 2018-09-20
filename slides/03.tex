@@ -40,6 +40,8 @@
 %   \tableofcontents
 % \end{frame}
 
+\section{Несколько задач}
+
 \begin{frame}[fragile]{Несколько задачек про прокрастинирующие вычисления}
 \begin{itemize}
  \item Построить бесконечный список чисел Фибоначчи \\ \href{https://www.haskell.org/hoogle/?hoogle=zipWith}{Подсказка}:\vspace{0.5cm}
@@ -73,7 +75,7 @@ data Tree a = Leaf a
  \item Отрицания формул:  $\neg a$, $\neg\neg b$ ...
  \item Конъюнкции двух формул: $a \wedge b$, $\neg b \wedge c$ ...
  \item Дизъюнкции двух формул: $a \vee b$, $\neg b \vee (c \vee d)$ ...
- \item Имплицации двух формул: $a \supset b$, $\neg b \supset (c \supset d)$ ...
+ \item Импликации двух формул: $a \supset b$, $\neg b \supset (c \supset d)$ ...
 \end{itemize}
 \pause
 Можно \textit{интерпретировать} синтаксические конструкции выше, придав смысл переменным, отрицанию и бинарным операциям. Google: логика высказываний, булева алгебра, таблица истинности.
@@ -91,6 +93,246 @@ data Tree a = Leaf a
    \item Можно придумать что-то хитрое
   \end{itemize}
 \end{itemize}
+\end{frame}
+
+\section{Мини-язык $\Lambda$ с арифметикой}
+
+\begin{frame}[fragile]{Ещё один мини-язык $\Lambda$ с арифметикой}
+Выражения в мини-языке бывают:
+\begin{itemize}
+ \item Константы: $1$,$2$,$3$, и т.д.
+ \item Именованные значения (``переменные''): $a$,$b$,$x$,$y$, и т.д.
+ \item Оператор сложения \verb=+=: $a+1$, $x+y+x$, и т.д.
+ \item Функции от одного аргумента: $(\lambda x \rightarrow x+1)$, $(\lambda x \rightarrow \lambda y \rightarrow x+y)$, и т.д.
+ \item Применение одного выражения к другому: $(\lambda x \rightarrow x + x) (2+3)$, $((\lambda x \rightarrow \lambda y \rightarrow x + y) 2) (3+5)$, и т.д.
+\end{itemize}
+\pause
+Упражнение: напишите алгебраический тип для языка $\Lambda$.\\
+\pause
+{\Large \faQuestion} Если мы хотим написать интерпретатор $\Lambda$, то как он должен работать?
+\end{frame}
+
+\begin{frame}[fragile]{Call-by-value}
+Также известно как \textit{stict} или \textit{eager}. Применяется в большинстве известных языков программирования.
+\vspace{1cm}
+
+Описывает как вычислять применение \hsinline=a= к \hsinline=b=.
+\begin{itemize}
+ \item Слева направо: вычисляем \hsinline=a=, затем \hsinline=b=, затем применяем.
+ \item Справа налево: \hsinline=b=, \hsinline=a=, затем применяем.
+\end{itemize}
+
+Замечание: если \hsinline=a= посчитано до конца, то разница отсутствует.
+\end{frame}
+
+\begin{frame}[fragile]{Call-by-value: примеры}
+Слева направо:
+\begin{itemize}
+ \item $((\lambda x \rightarrow \lambda y \rightarrow x + y) 2) (3+5)$
+ \item $(\lambda y \rightarrow 2 + y) (3+5)$
+ \item $(\lambda y \rightarrow 2 + y) 8$
+ \item $2+8$
+ \item $10$
+\end{itemize}
+Справа налево:
+\begin{itemize}
+ \item $((\lambda x \rightarrow \lambda y \rightarrow x + y) 2) (3+5)$
+ \item $((\lambda x \rightarrow \lambda y \rightarrow x + y) 2) 8$
+ \item $(\lambda y \rightarrow 2 + y) 8$
+ \item $2+8$
+ \item $10$
+\end{itemize}
+В чистых языках не важно как вычислять: справо налево или слева направо, ответ одинаковый.
+\end{frame}
+
+\begin{frame}[fragile]{Call-by-name: пример}
+Не вычисляем аргменты функций. Когда они понадобятся мы подставляем аргумент как он есть туда. где он используется.
+\vspace{1cm}
+\begin{itemize}
+ \item $((\lambda x \rightarrow \lambda y \rightarrow x + y + y) 2) (3+5)$
+ \item $(\lambda y \rightarrow 2 + y + y) (3+5)$
+ \item $2 + (3+5) + (3+5)$
+ \item $2 + 8 + (3+5)$ 
+ \item А теперь допустим, что \verb=+= вычисляется слева направо
+ \item $10 + (3+5)$
+ \item $10+8$
+ \item $18$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Call-by-name: пример и не из мини-языка, и не из Haskell}
+\begin{itemize}
+ \item $(\lambda x \rightarrow x; x)$ (print "hi")
+ \item (print "hi"); (print "hi")
+ \item (print "hi")
+ \item ()
+\end{itemize}
+{\Large \faQuestion} Что напечатается?
+\end{frame}
+
+\begin{frame}[fragile]{Вычисления ... особого рода}
+Упражнение прямо на лекции: давайте посчитаем выражение тремя способами\\
+\begin{center}
+ $(\lambda y \rightarrow y y) (\lambda x \rightarrow x x)$
+\end{center}
+\pause
+Считаем, считаем, считаем... и получаем
+\begin{center}
+ $(\lambda x \rightarrow x x) (\lambda x \rightarrow x x)$
+\end{center}
+То же самое, с точностью до переименования\\
+Считаем дальше и зависаем\\
+\vspace{1cm}
+Одно и то же, при трех стратегиях.
+\end{frame}
+
+\begin{frame}[fragile]{Всегда ли одинаковый ответ?}
+Положим $loop$ это $(\lambda x \rightarrow x x) (\lambda x \rightarrow x x)$ и рассмотрим
+\begin{center}
+ $(\lambda x \rightarrow\lambda y \rightarrow y y) (loop)$
+\end{center}\pause
+{\Large \faQuestion} Что будет, если посчитать с помощью CBV?\pause \\
+{\Large \faQuestion} А если CBN?\pause
+\begin{center}
+ $(\lambda y \rightarrow y)$
+\end{center}
+CBN завершается, а CBV -- нет
+\end{frame}
+
+\begin{frame}[fragile]{Так может CBV строго лучше CBN?}
+\begin{center}
+ $(\lambda y \rightarrow y y) (big)$
+\end{center}
+Применяем call-by-name:\pause
+\begin{center}
+ $(big)(big)$
+\end{center}\pause
+CBV считает аргумент один раз. CBN -- два. \\
+\vspace{1cm}
+Вообще, если аргумент функции встречается больше одного раза, то CBN будет вычислять его больше одного раза. Нехорошо.
+\end{frame}
+
+\begin{frame}[fragile]{Так может CBV vs. CBN vs. call-by-need (lazy, прокрастинирующий)}
+Иногда CBN завершается, а CBV -- нет.\\
+Иногда CBV не вычисляет что-то, что CBN вычисляет.\\
+Иногда CBN не вычисляет что-то 2,3 или больше раз, когда CBV только один.\\
+\vspace{1cm}
+Ленивые вычисления
+\begin{itemize}
+ \item Если что-то посчитали -- запоминаем результат на будущее. Избегает повторных вычислений
+ \item Завершается, если CBN завершается
+ \item Вычисляет аргументы максимум один раз
+\end{itemize}
+{\Large \faQuestion} Так может call-by-need -- это то, что нужно всегда использовать?
+\end{frame}
+
+\begin{frame}[fragile]{call-by-need a.k.a. прокрастинирующие}
+\begin{itemize}
+  \item Создание отложенного вычисления типа \hsinline=T= зачастую сводится к созданию функции \hsinline=() -> T=.
+  \item Требует некоторых усилий, использует некоторое количество памяти. На больших программах может стать важным
+\end{itemize}
+\begin{verbnobox}[\monacoB]
+ xs = [1,2,3,..... big list, ...]
+ n = foldl (+) 0 xs
+\end{verbnobox}
+\pause
+Список \hsinline=xs= занимает много памяти, но его нельзя объявить мусором, потому что элементы используются при вычислении \hsinline=n=.\pause\\
+\vspace{0.5cm}
+Но существует функция \hsinline=fold'=!\\
+
+Упражнение: попробуйте поскладывать большие списки чисел (\hsinline=[1..1000000]=) с помощью foldl, foldr, foldl'. Когда лучше использовать \hsinline=foldl= вместо \hsinline=foldl'=?
+\end{frame}
+
+\begin{frame}[fragile]{Упражнение: вычисление выражения из языка $\Lambda$}
+Задачи такого рода были в том году на экзамене.
+\vspace{1cm}
+\hsinline=evalL:: [(String, L)] -> L -> Maybe L=
+
+Нужно действовать по аналогии с примером про вычислитель арифметики с операциями сложения и умножения. Из стратегий вычислений (CBV, CBN, прокрастинирующую) выберите какая нравится.
+
+N.B. Там есть \textbf{грабли}.
+\end{frame}
+
+\section{Про Fix}
+\begin{frame}[fragile]{Неподвижная точка}
+Рассмотрим $f: A \rightarrow A$. \\
+$x$ -- это \textit{неподвижная точка}, если $f(x) = x$.
+
+\vspace{1cm}
+Неподвижная точка в Haskell:
+\begin{verbnobox}[\monacoB]
+ fix f = let {x = f x} in x
+\end{verbnobox}
+ну или
+\begin{verbnobox}[\monacoB]
+ fix f = f (fix f)
+\end{verbnobox}
+\end{frame}
+
+\begin{frame}[fragile]{Пример}
+\begin{verbnobox}[\monacoB]
+fix :: (t -> t) -> t
+fix f = f (fix f)
+\end{verbnobox}
+ 
+\begin{verbnobox}[\monacoB]
+last :: [a] -> Maybe a
+last [] = Nothing
+last [x] = Just x
+last (x:xs) = last xs
+\end{verbnobox}
+\pause
+\begin{verbnobox}[\monacoB]
+last2 :: [a] -> Maybe a
+last2 = fix g 
+  where 
+    g _ []     = Nothing
+    g _ [x]    = Just x
+    g r (_:xs) = r xs
+\end{verbnobox}
+\end{frame}
+
+\begin{frame}[fragile]{Упражнения про fix для функций}
+ Реализовать через \hsinline=fix=:
+ \begin{itemize}
+  \item \hsinline=map=
+  \item Вычисление n-го числа Фибоначчи
+  \item Для данного числа \hsinline=n= посчитайте \hsinline=cos (cos (cos ..... n)...)= пока результат (а именно \hsinline=0.7390851332151607=) не перестанет изменяться. 
+ \end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Fixpoint для типов (1/2) }
+Почти связный список
+\begin{center}
+\hsinline!data ListG a r = Nil | Cons a r!
+\end{center}
+Что по сути описывает либо пустой список, либо ячейку памяти со значением типа \hsinline=a= и ``дыркой''.
+
+\begin{center}
+\hsinline!type List2 a r = ListG a (ListG a r)!
+\hsinline!type List3 a r = ListG a (List2 a r)!
+\hsinline!type List4 a r = ListG a (List3 a r)!
+\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]{Fixpoint для типов (2/2)}
+ 
+\begin{lstlisting}[style={hsstyle1}, mathescape=true, escapebegin=, escapeend=]
+type RingF$_{n+1}$ a = RingF   (RingF$_{n+1}$  a)
+
+newtype Fix f = Fix (f (Fix f))
+Fix :: f (Fix f) -> Fix f
+
+type List a = Fix (ListG a)
+\end{lstlisting}
+Теперь можно конструировать значения типа \hsinline=List a=:\pause
+\begin{lstlisting}[style={hsstyle1}, mathescape=false, escapebegin=, escapeend=]
+(Fix Nil) :: List a
+(Fix $ Cons 1  $ Fix Nil) :: List Int
+(Fix $ Cons 1  $ Fix $ Cons 2 $ Fix Nil) :: List Int :: List Int
+\end{lstlisting}
 \end{frame}
 
 \end{document}
