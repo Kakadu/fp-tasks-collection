@@ -12,5 +12,8 @@ all:
 03.pdf: 03.tex
 	xelatex -shell-escape -interaction=nonstopmode $<
 
+04.pdf: 04.tex
+	xelatex -shell-escape -interaction=nonstopmode $<
+
 
 	

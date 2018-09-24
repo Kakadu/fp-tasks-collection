@@ -1,0 +1,52 @@
+\documentclass{beamer}
+\usetheme{CambridgeUS}
+\beamertemplatenavigationsymbolsempty % remove navigation bar
+
+\input{heading2.tex}
+
+
+\title[Занятие 4: типы]{Типы в функциональном программировании}
+\author{Косарев Дмитрий a.k.a. Kakadu}
+
+\institute{матмех СПбГУ}
+
+\date{\today}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+\begin{document}
+\maketitle
+
+% For every picture that defines or uses external nodes, you'll have to
+% apply the 'remember picture' style. To avoid some typing, we'll apply
+% the style to all pictures.
+\tikzstyle{every picture}+=[remember picture]
+
+% By default all math in TikZ nodes are set in inline mode. Change this to
+% displaystyle so that we don't get small fractions.
+\everymath{\displaystyle}
+
+% Uncomment these lines for an automatically generated outline.
+% \begin{frame}{Outline}
+%   \tableofcontents
+% \end{frame}
+
+\begin{frame}[fragile]{Какие-то задачки}
+\pause
+~\ Ну, если $x$ принадлежит типу \inline=T=, то \inline=T= определяет, какие значения может принимать $x$.
+\\ \vspace{0.5cm} %\pause
+~\ \emph{Тип} \inline=T= у $x$ -- это \sout{множество} совокупность значений, которые могут быть у $x$.
+\vspace{0.5cm} \\ %\pause
+~\  Если \inline=x :: T=, то тип \inline=T= \emph{населен} иксом.
+\\ \vspace{0.5cm} %\pause
+~\ Если $\nexists$ \inline=x=, таких что \inline=x :: T=, то тип \inline=T= \emph{не населен}.
+\end{frame}
+
+
+\end{document}
